@@ -1,3 +1,19 @@
+# FastAPI 프로젝트 실행 방법
+
+1. 가상환경 활성화(Windows):
+   
+	```powershell
+	.venv\Scripts\activate
+	```
+
+2. 서버 실행:
+   
+	```powershell
+	uvicorn app.main:app --reload
+	```
+
+## 코딩 컨벤션
+- 자세한 규칙은 doc/CONVENTION.md 참고
 # AI 6기 2팀 음식 이미지 생성 프로젝트
 
 AI 고급 과정 6기 2팀의 생성 프로젝트 리포지토리에 오신 것을 환영합니다.
