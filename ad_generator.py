@@ -79,10 +79,14 @@ pipe = StableDiffusionXLPipeline.from_pretrained(
 print("이미지 생성 모델 로드 완료")
 
 STYLE_MAP = {
-    "모던함": "modern, minimalist, clean white background, sleek design, sharp focus",
-    "따뜻함": "warm, cozy, soft lighting, wooden table, cafe atmosphere, golden hour",
-    "고급스러움": "luxury, elegant, dark background, golden accent, fine dining, dramatic lighting",
-    "귀여움": "cute, pastel color, kawaii style, soft focus, bright and cheerful",
+    "모던함": "Ultra-modern, minimalist, sterile white space, sharp edges, high-tech commercial shot",
+    "따뜻함": "Sun-drenched, rustic charm, cozy organic textures, soft amber glow, inviting atmosphere",
+    "고급스러움": "Opulence, premium matte finish, gold leaf accents, moody chiaroscuro lighting, elite aesthetic",
+    "귀여움": "Whimsical, playful, vibrant pastels, 3D claymation style, soft rounded shapes, cheerful",
+    "센스있는": "Sophisticated, curated, artistic composition, muted tones, effortless elegance, avant-garde",
+    "깔롱지는": "Sleek, trendy, high-contrast, street-style aesthetic, neon highlights, bold and flashy",
+    "생동감": "Vibrant, high-speed splash, motion blur, energetic, crisp textures, exploding flavors",
+    "내추럴": "Raw, earthy, botanical, hyper-realistic textures, daylight, sustainable vibe",
 }
 
 
