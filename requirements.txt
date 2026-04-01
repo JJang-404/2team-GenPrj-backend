@@ -1,2 +1,21 @@
 fastapi
 uvicorn
+torch==2.10.0+cu130
+torchvision==0.25.0+cu130
+torchaudio==2.10.0+cu130
+--extra-index-url https://download.pytorch.org/whl/cu130
+diffusers
+deep-translator
+transformers
+accelerate
+dotenv
+langchain
+langchain-openai
+onnx
+onnxruntime
+brotli
+brotlicffi
+httpx
+huggingface_hub
+optimum[onnxruntime]
+sentencepiece

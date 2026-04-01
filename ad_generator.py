@@ -7,7 +7,7 @@ AI 광고 이미지 생성기
 import os
 import textwrap
 import torch
-from diffusers import StableDiffusionXLPipeline
+from diffusers import StableDiffusion3Pipeline
 from deep_translator import GoogleTranslator
 from PIL import Image, ImageDraw, ImageFont
 from fastapi import FastAPI, HTTPException
@@ -16,6 +16,9 @@ from pydantic import BaseModel
 from typing import List
 import io
 import zipfile
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # ──────────────────────────────────────────────
 # [0단계] 번역 (한국어 → 영어)
@@ -70,8 +73,8 @@ def generate_tagline(store_name: str, product: str, style: str) -> str:
 # [1단계] AI 레이어: SDXL 모델 로드
 # ──────────────────────────────────────────────
 print("이미지 생성 모델 로드 중...")
-pipe = StableDiffusionXLPipeline.from_pretrained(
-    "stabilityai/stable-diffusion-xl-base-1.0",
+pipe = StableDiffusion3Pipeline.from_pretrained(
+    "stabilityai/stable-diffusion-3.5-medium",
     torch_dtype=torch.float16,
     variant="fp16",
     use_safetensors=True,
