@@ -1,0 +1,574 @@
+
+
+
+# 서버 도커 설정.
+
+1) 대상 폴더 : /home/spai0641/docker/genPrj-split
+
+2) /home/spai0641/docker/genPrj-split/Dockerfile
+
+FROM debian:13
+
+RUN apt-get update && apt-get install -y \
+    python3 python3-pip python3-venv openssh-server sudo curl git \
+    && rm -rf /var/lib/apt/lists/*
+
+# SSH 설정
+RUN mkdir -p /var/run/sshd && \
+    echo 'root:rootpassword' | chpasswd && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# FastAPI 및 통신 라이브러리 설치
+RUN pip install --break-system-packages fastapi uvicorn httpx
+
+WORKDIR /app
+EXPOSE 22 8000
+CMD ["/usr/sbin/sshd", "-D"]
+
+
+3) /home/spai0641/docker/genPrj-split/docker-compose.yml
+services:
+  ai-engine:
+    image: nvcr.io/nvidia/pytorch:24.03-py3
+    container_name: sd-vllm-engine
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - /share/.cache/huggingface:/root/.cache/huggingface
+      - ./engine:/app
+    working_dir: /app
+    ports:
+      - "8001:8001"
+    command: python3 server.py --port 8001
+    networks:
+      - ai-network
+
+  backend:
+    build: .
+    container_name: fastapi-backend
+    restart: always
+    working_dir: /app  # 컨테이너 시작 시 /app 폴더에서 작업을 시작하도록 명시
+    ports:
+      - "8000:8000"
+      - "10022:22"
+    depends_on:
+      ai-engine:
+        condition: service_started
+    environment:
+      - ENGINE_URL=http://ai-engine:8001
+    volumes:
+      # 호스트의 ./project 폴더 내용을 컨테이너의 /app으로 연결
+      - ./project:/project
+    networks:
+      - ai-network
+
+networks:
+  ai-network:
+    driver: bridge
+
+4) /home/spai0641/docker/genPrj-split/engine/server.py
+import torch
+from diffusers import StableDiffusion35Pipeliner
+from fastapi import FastAPI
+import uvicorn
+
+app = FastAPI()
+
+# 1. 모델 로드 (L4 VRAM의 약 70% 수준인 fp16 사용)
+model_id = "stabilityai/stable-diffusion-3.5-large"
+pipe = StableDiffusion35Pipeliner.from_pretrained(model_id, torch_dtype=torch.float16)
+pipe.to("cuda")
+
+# 2. Triton 가속 (남은 30%를 연산 버퍼로 활용)
+pipe.transformer = torch.compile(pipe.transformer, mode="reduce-overhead")
+
+@app.post("/generate")
+async def generate(prompt: str):
+    image = pipe(prompt=prompt, num_inference_steps=30).images[0]
+    # 이미지 처리 로직...
+    return {"status": "success"}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8001)
+
+
+5) 도커 이미지 만들기
+# 이미지 만들기
+sudo docker-compose up --build -d
+# 실시간 로그 확인.
+sudo docker logs -f sd-vllm-engine
+#  nvidia-smi 사용.
+
+6) 수정 반영
+
+## 코드 수정 후 반영:
+## volumes 설정을 통해 호스트의 폴더(project, engine)를 연결했으므로, 호스트에서 파일을 수정하고 아래 명령어만 치면 즉시 반영됩니다. (이미지 재빌드 불필요)
+
+Bash
+## 백엔드 코드(main.py) 수정 후 재시작 (1초 소요)
+sudo docker-compose restart backend
+
+## 엔진 코드(server.py) 수정 후 재시작 (모델 다시 로드하므로 수 분 소요)
+sudo docker-compose restart ai-engine
+
+
+
+sudo docker-compose down && sudo docker-compose up --build -d
+# 실시간 로그 확인 (설치가 잘 되고 있는지 보세요)
+sudo docker logs -f sd-vllm-engine
+
+sudo docker-compose restart ai-engine
+
+현재 다음과 같은 작업을하려고 합니다.
+vllm은 현재 띄울수 없습니다.(GPU사용상  단독 사용.)
+아래가 맞는지 검토해 주세요.
+1) 모델 다운로드
+huggingface-cli login
+git lfs install
+git clone https://huggingface.co/stabilityai/stable-diffusion-3.5-large
+
+2) 모델 변환 (TensorRT)
+trtexec --onnx=onnx_model/unet.onnx --saveEngine=unet.plan
+
+3) Triton 단독으로 띄우기.(GPU사용상 다른 것은 허가 하기 힘듬)
+docker run --gpus all --rm \
+  -p8900:8000 -p8901:8001 -p8902:8002 \
+  -v /path/to/models:/models \
+  nvcr.io/nvidia/tritonserver:latest \
+  tritonserver --model-repository=/models
+
+
+4) 추론 요청
+curl -X POST localhost:8000/v2/models/stable-diffusion-3.5-large/infer \
+  -H "Content-Type: application/json" \
+  -d '{
+    "inputs":[{"name":"prompt","datatype":"BYTES","shape":[1],"data":["A fantasy castle at sunset"]}]
+  }'
+
+5) Triton은 Text Encoder, UNet, VAE를 각각 모델로 등록해야 하며, 파이프라인을 맞춰야 합니다.(이것이 무슨말인가요?)
+6) 그리고 이미지를 전송해서 stable-diffusion-3.5-large 이미지를 카툰화해서 제공하는것이 가능 한가요?
+
+
+일단 설치 가이드가 필요 합니다. 처음에는 저의 개인 컴퓨터에 연습으로 사용하려고 합니다. 
+개인 컴퓨터는 아래와 같습니다.
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 5060 Ti     Off |   00000000:01:00.0 Off |                  N/A |
+|  0%   25C    P8              5W /  180W |       2MiB /  16311MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+
+도커로 올려서 사용하는 것이 좋은가요? 아니면 그냥 서버로 돌리는게 좋은가요? 일단 설치해서 
+돌려 보는게 목적 입니다.
+
+
+1)  TensorRT-Diffusion 도커 설치 가이드
+
+# 공식 가이드에 따른 설치 (Ubuntu 기준)
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+    sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+
+
+2) 2. NVIDIA PyTorch 컨테이너 실행
+NVIDIA에서 제공하는 최적화된 이미지를 내려받아 실행합니다.
+
+Bash
+# 최신 TensorRT와 개발 환경이 포함된 이미지
+sudo docker run --gpus all -it --rm --shm-size=16g -v ./workspace:/workspace nvcr.io/nvidia/pytorch:24.03-python3
+
+sudo docker run --gpus all -it --rm --shm-size=16g -v ./workspace:/workspace nvcr.io/nvidia/pytorch:24.03-py3
+
+-v $(pwd):/workspace: 현재 폴더를 도커 내부와 연결하여 모델 파일을 공유합니다.
+
+3. TensorRT-Diffusion 라이브러리 설치 (컨테이너 내부)
+컨테이너 안으로 들어왔다면, 이제 전용 라이브러리를 설치합니다.
+
+Bash
+# 라이브러리 설치
+pip install --upgrade pip
+pip install tensorrt-cu12  # CUDA 12/13 호환
+
+# NVIDIA 공식 텐서RT 확산(Diffusion) 레포지토리 클론
+git clone https://github.com/NVIDIA/TensorRT.git
+cd TensorRT/demo/Diffusion
+pip install -r requirements.txt
+
+🚀 첫 번째 연습: SD 1.5로 테스트 (깔롱지게 성공하기)
+SD 3.5L은 용량이 커서 시간이 오래 걸리니, 먼저 가벼운 모델로 엔진이 잘 구워지는지 확인해 보세요.
+
+1. 엔진 빌드 (ONNX 변환 및 컴파일)
+Bash
+python3 demo.py --model_id "runwayml/stable-diffusion-v1-5" --precision fp16 --build-static-shape
+이 과정에서 모델을 다운로드하고 RTX 5060 Ti에 최적화된 .plan 파일을 생성합니다.
+
+2. 이미지 생성 테스트
+Bash
+python3 demo.py --prompt "A stylish cat wearing sunglasses, cyberpunk style" --precision fp16
+생성된 이미지는 현재 폴더에 저장됩니다.
+
+1) 맨먼저 설치.
+sudo docker pull nvcr.io/nvidia/pytorch:24.03-py3
+
+sudo docker pull nvcr.io/nvidia/pytorch:25.01-py3
+
+
+2) pull성공했어요.
+
+3) 1. 컨테이너 실행 (내부 진입)
+먼저 내려받은 이미지를 실행하여 컨테이너 안으로 들어갑니다. (현재 workspace 폴더와 연결됩니다.)
+
+Bash
+sudo docker run --gpus all -it --rm --shm-size=16g -v ./workspace:/workspace nvcr.io/nvidia/pytorch:24.03-py3
+# 25.01 또는 그 이상 버전을 시도해 보세요.
+sudo docker run --gpus all -it --rm --shm-size=16g -v ./workspace:/workspace nvcr.io/nvidia/pytorch:25.01-py3
+
+1) 일단, 성공함.
+sudo docker pull nvcr.io/nvidia/pytorch:25.01-py3
+
+2) 수행.
+sudo docker run --gpus all -it --rm \
+    --shm-size=16g \
+    -v ./workspace:/workspace \
+    nvcr.io/nvidia/pytorch:25.01-py3
+
+3) 확인
+nvidia-smi
+
+2) 수행.
+sudo docker run --gpus all -it --rm --shm-size=16g -v ./workspace:/workspace nvcr.io/nvidia/pytorch:25.01-py3
+
+3) 확인
+nvidia-smi
+
+4) docker안에서의 작업.(필요한 모듈 설치.)
+# 1. 작업 디렉토리 이동 (호스트와 연결된 곳)
+cd /workspace
+
+# 2. NVIDIA 공식 TensorRT 레포지토리 클론
+git clone https://github.com/NVIDIA/TensorRT.git
+cd TensorRT/demo/Diffusion
+
+# 3. 필수 라이브러리 설치 (약 2~3분 소요)
+pip install --upgrade pip
+pip install -r requirements.txt
+
+5) workspace에서
+git clone https://github.com/NVIDIA/TensorRT.git  : TensorRT 다시 가져 오기.(기존에 있다면 없애기-demo.py가 있어야 한다.)
+cd /workspace/TensorRT/demo/Diffusion
+pip install -r requirements.txt
+
+python3 setup.py sd
+
+
+
+
+# 1. 핵심 라이브러리 설치
+pip install --upgrade diffusers transformers accelerate
+
+# 2. TensorRT 전용 확산(Diffusion) 가속 라이브러리
+pip install "static-diffusers[torch]" --index-url https://pypi.ngc.nvidia.com
+
+
+# 1. 현재 컨테이너 저장 (이미 하셨다면 패스)
+docker commit a7207d7a38f4 nabi_sd_final
+
+docker stop a7207d7a38f4
+docker rm a7207d7a38f4
+
+
+# 2. 8000번(API)과 2222번(SSH용) 포트를 동시에 열기
+docker run -it --gpus all -p 8123:8000 -p 2222:22 -v /home/nabi:/workspace/scr --name nabi_sd_server nabi_sd_final bash
+
+
+
+3) 확인
+nvidia-smi
+
+2) 수행.
+sudo docker run --gpus all -it -p 8123:8000 -p 2222:22 --rm --shm-size=16g -v ./workspace:/workspace nvcr.io/nvidia/pytorch:25.01-py3
+
+# 8123(API용), 2222(SSH용) 포트 매핑 및 넉넉한 공유 메모리 설정
+sudo docker run --gpus all -it \
+  -p 8123:8000 \
+  -p 2222:22 \
+  --rm \
+  --shm-size=16g \
+  -v $(pwd)/workspace:/workspace \
+  nvcr.io/nvidia/pytorch:25.01-py3
+
+
+4) docker안에서의 작업.(필요한 모듈 설치.)
+# 1. 작업 디렉토리 이동 (호스트와 연결된 곳)
+cd /workspace
+
+# 1. 꼬여있는 관련 패키지들을 한꺼번에 지웠다 다시 설치합니다.
+pip uninstall -y transformers diffusers peft accelerate
+
+# 2. 검증된 안정 버전 조합으로 설치 (transformers 4.46.0 이상이 HybridCache를 지원합니다)
+pip install transformers==4.46.3 diffusers==0.31.0 accelerate==1.1.0 peft==0.13.2  sentencepiece protobuf ftfy
+
+python3 run_sd.py
+
+
+
+🚀 최종 완성된 절차 (복사해서 쓰세요)
+나비님의 시나리오를 바탕으로 가장 깔끔하게 다듬은 최종 버전입니다.
+
+1) 호스트에서 실행
+
+Bash
+# 8123(API용), 2222(SSH용) 포트 매핑 및 넉넉한 공유 메모리 설정
+sudo docker run --gpus all -it -p 8123:8000 -p 2222:22 --rm --shm-size=16g -v $(pwd)/workspace:/workspace nvcr.io/nvidia/pytorch:25.01-py3
+
+# 1. 호스트에 캐시 폴더 미리 생성 (권장)
+mkdir -p $(pwd)/hf_cache
+
+# 2. 실행 명령어 ( -v 옵션 하나 더 추가!)
+** 수행함.
+sudo docker run --gpus all -it -p 8123:8000 -p 2222:22 --rm --shm-size=16g -v $(pwd)/workspace:/workspace -v /share/.cache/hf_cache:/root/.cache/huggingface nvcr.io/nvidia/pytorch:25.01-py3
+
+1) 설치.
+sudo docker run --gpus all -it -p 8123:8000 -p 10023:22 --rm --shm-size=16g -v $(pwd)/workspace:/workspace -v /share/.cache/hf_cache:/root/.cache/huggingface nvcr.io/nvidia/pytorch:25.01-py3
+2) 콘솔 진입후
+apt-get update && apt-get install -y openssh-server
+service ssh start
+3) root 비밀번호
+passwd   
+4)root 계정 접속 가능
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+5) 설정을 적용하기 위해 SSH 서비스 재시작
+service ssh restart
+
+6) 접속
+ssh root@localhost -p 10023
+
+7) 설치.
+pip install transformers==4.46.3 diffusers==0.31.0 accelerate==1.1.0 peft==0.13.2 sentencepiece protobuf ftfy --break-system-packages
+pip install huggingface_hub fastapi uvicorn python-multipart --break-system-packages
+
+
+# 1. SSH 설치 및 서비스 시작
+apt-get update && apt-get install -y openssh-server
+service ssh start
+
+# 2. 루트(root) 비밀번호 설정 (나중에 접속할 때 쓸 비번입니다)
+passwd root
+# (비밀번호를 두 번 입력하세요. 화면에는 아무것도 안 뜨는 게 정상입니다!)
+Keem7725
+
+
+
+
+# SSH 서버 시작 (원격 접속용)
+apt-get update && apt-get install -y openssh-server
+service ssh start
+
+# 테스트 실행
+python3 run_sd.py
+💡 꿀팁: 왜 8123 포트인가요?
+나비님이 -p 8123:8000으로 설정하셨으므로, 나중에 FastAPI를 띄울 때는 아래와 같이 실행해야 호스트 브라우저에서 접속이 가능합니다.
+
+Python
+# main.py 실행 시
+uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+import torch
+from diffusers import StableDiffusionPipeline
+
+# 1. 모델 ID 설정 (SD 1.5)
+model_id = "runwayml/stable-diffusion-v1-5"
+
+# 2. 모델 로드 (FP16으로 더 빠르게)
+pipe = StableDiffusionPipeline.from_pretrained(
+    model_id, 
+    torch_dtype=torch.float16,
+    variant="fp16"
+)
+pipe.to("cuda")
+
+# 3. 최적화 옵션 (5060 Ti의 성능을 뽑아냅니다)
+pipe.enable_attention_slicing()
+
+# 4. 이미지 생성
+prompt = "A high-tech cyberpunk cat, 8k, detailed"
+print("🚀 SD 1.5로 이미지 생성을 시작합니다...")
+
+with torch.inference_mode():
+    image = pipe(prompt).images[0]
+
+# 5. 저장
+image.save("result_1.5.png")
+print("✨ 성공! result_1.5.png 파일이 생성되었습니다.")
+
+
+
+
+run_sd_medium.py
+
+
+import torch
+from diffusers import StableDiffusion3Pipeline
+
+# 1. 모델 ID 설정 (Medium 버전)
+model_id = "stabilityai/stable-diffusion-3.5-medium"
+
+print("🚀 SD 3.5 Medium 모델 로드 중... (Large보다 훨씬 가볍습니다)")
+
+# 2. 모델 로드 (VRAM 16GB 최적화 세팅)
+pipe = StableDiffusion3Pipeline.from_pretrained(
+    model_id, 
+    torch_dtype=torch.bfloat16
+)
+
+# 3. 5060 Ti를 위한 메모리 관리
+pipe.enable_model_cpu_offload() 
+# 만약 속도를 더 높이고 싶고 VRAM 여유가 있다면 위 라인 대신 pipe.to("cuda") 사용
+
+# 4. 이미지 생성 테스트
+prompt = "A high-quality advertisement poster for a cozy cafe, delicious latte art on a wooden table, warm morning sunlight, cinematic 8k"
+
+print("✨ 이미지 생성 시작...")
+with torch.inference_mode():
+    image = pipe(
+        prompt, 
+        num_inference_steps=30, 
+        guidance_scale=4.5 # Medium은 Large보다 낮은 guidance scale을 권장하기도 합니다
+    ).images[0]
+
+# 5. 저장
+image.save("result_sd35_medium.png")
+print("🎉 성공! result_sd35_medium.png 파일을 확인하세요.")
+
+
+
+
+docker compose up -d --build
+docker compose down
+
+# 1. 컨테이너 내부의 root 비밀번호를 '1234'로 강제 변경 (원하는 비번으로 바꾸세요)
+sudo docker exec -it nabi_ad_server /bin/bash -c "echo 'root:1234' | chpasswd"
+
+# 2. SSH 서비스가 혹시 죽어있을지 모르니 재시작
+sudo docker exec -it nabi_ad_server /bin/bash -c "service ssh restart"
+
+
+# http://all2ai.iptime.org:8123/generate?prompt=delicious+croissant+and+coffee+on+a+wooden+table+8k 형태로 호출되면, 프롬프트에 따라 이미지를 생성하는 API 엔드포인트를 추가할 수 있습니다. 예를 들어, 다음과 같이 구현할 수 있습니다:
+@router.get("/generate")
+def Generate_Image(prompt: str) -> dict[str, Any]:
+    out_map: dict[str, Any] = {}
+    try:
+        # 프롬프트에 따라 이미지 생성 로직 (예시로 더미 URL 반환)
+        image_url = f"http://all2ai.iptime.org:8123/generate?prompt={prompt.replace(' ', '+')}"
+        out_map["image_url"] = image_url
+        out_map.update(Get_Ok_Response())
+    except Exception as ex:
+        out_map.update(Get_Error_Response(str(ex)))
+    return out_map
+
+    => 에서 실제 이미지를 리턴 하려면?
+
+
+
+    Windows PowerShell
+$env:ENGINE_URL="http://localhost:8123"
+Docker Compose (이미 작성하신 방식)
+environment:
+ENGINE_URL=http://ai-engine:8001
+확인 방법:
+이런 것을  환경이 아니라  
+nabidream.ini에 지정해서 읽어서 처리해 주세요
+
+.security/.env 안에 OPEN_API_KEY 를 읽어서 openapi.py 에서 프롬프트 "이 한글을 영어로 변환해 주세요" 로 changeKor2Eng(korStr) 메소르를 만들어 주세요. (클래스로 만들어 주세요)
+
+
+
+backend.ini 의 
+[engine] -> base_prompt_msg 을 미리 defines.py에서 읽고 정의하고 openai.py의 클래스에서 changeKor2Eng의 msg에 대입해 주세요.
+
+
+ # 1. 작업 폴더의 소유자를 root로 변경
+chown -R root:root /project
+
+# 2. 모든 사용자에게 읽기/쓰기/실행 권한 부여 (가장 확실한 방법)
+chmod -R 777 /project
+
+
+
+backend.ini 의 아래 항목을 이용해서
+[server]
+port = 8119
+
+defines.py에 선언하고 이용해 주세요.
+
+main.py 에서 
+port = int(os.environ.get("BACKEND_PORT", 8119)) => 이부분에서  읽어 오도록 해주세요.
+
+
+
+async def changeimage(
+    prompt: str = Form(...),
+    image: UploadFile | None = File(default=None),
+    image_base64: str | None = Form(default=None),
+    strength: float = Form(default=0.45),
+) -> 
+
+ 함수는 아래의 함수를   restapi로 호출합니다. 
+ 호출에 맞게 위의 함수를 수정해 주세요.
+ 
+
+@router.post("/changeimage")
+async def changeimage(req: ChangeImageRequest):
+    if req.strength < 0.0 or req.strength > 1.0:
+        raise HTTPException(status_code=400, detail="strength는 0.0~1.0 범위여야 합니다.")
+
+    print(f"🛠️ 이미지 변환 요청 프롬프트: {req.prompt}")
+
+    raw_base64 = req.image_base64
+    if "," in raw_base64:
+        raw_base64 = raw_base64.split(",", 1)[1]
+
+    try:
+        input_bytes = base64.b64decode(raw_base64, validate=True)
+        init_image = Image.open(BytesIO(input_bytes)).convert("RGB")
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="유효한 base64 이미지가 아닙니다.") from exc
+
+    image = diffusion_service.change_image(
+        prompt=req.prompt,
+        init_image=init_image,
+        strength=req.strength,
+    )
+
+    img_byte_arr = BytesIO()
+    image.save(img_byte_arr, format="PNG")
+
+    print("✅ 이미지 변환 완료!")
+    return Response(content=img_byte_arr.getvalue(), media_type="image/png")
+
+

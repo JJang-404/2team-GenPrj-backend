@@ -5,3 +5,6 @@ assets/external/
 __pycache__/
 .states
 .security/
+.venv/
+.vscode/
+.idea/

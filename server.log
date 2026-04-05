@@ -1,0 +1,39 @@
+nohup: ignoring input
+INFO:     Started server process [506]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+(1.0)genPrj Backend Server is running on http://localhost:8000
+Translated prompt: Chinese restaurant
+INFO:     172.18.0.1:37194 - "GET /addhelper/accessdata/generate?prompt=%EC%A4%91%EA%B5%AD%EC%A7%91 HTTP/1.1" 200 OK
+Translated prompt: Chinese restaurant
+INFO:     172.18.0.1:33552 - "GET /addhelper/accessdata/generate?prompt=%EC%A4%91%EA%B5%AD%EC%A7%91 HTTP/1.1" 200 OK
+Translated prompt: Arcade advertisement
+INFO:     172.18.0.1:57376 - "GET /addhelper/accessdata/generate?prompt=%EC%98%A4%EB%9D%BD%EC%8B%A4%20%EA%B4%91%EA%B3%A0 HTTP/1.1" 200 OK
+Translated prompt: Coffee shop menu background
+INFO:     172.18.0.1:34646 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%A0%84%EB%AC%B8%EC%A0%90%20%EB%A9%94%EB%89%B4%20%EB%B0%B0%EA%B2%BD HTTP/1.1" 200 OK
+Translated prompt: Background for cafe signature product flyer
+
+Alternative phrasings:
+- Cafe signature product flyer background
+- Background for a cafe's signature product flyer
+INFO:     172.18.0.1:42852 - "GET /addhelper/accessdata/generate?prompt=%EC%B9%B4%ED%8E%98%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%20%EC%A0%84%EB%8B%A8%EC%A7%80%20%EB%B0%B0%EA%B2%BD HTTP/1.1" 200 OK
+WARNING:  Invalid HTTP request received.
+INFO:     147.182.196.155:52200 - "GET / HTTP/1.1" 200 OK
+INFO:     147.182.196.155:52202 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:43058 - "GET / HTTP/1.1" 200 OK
+Translated prompt: Please create the background for the cafe's signature product flyer in Hangul (Korean).
+INFO:     172.18.0.1:35316 - "GET /addhelper/accessdata/generate?prompt=%EC%B9%B4%ED%8E%98%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%20%EC%A0%84%EB%8B%A8%EC%A7%80%20%EB%B0%B0%EA%B2%BD%20%ED%95%9C%EA%B8%80%EB%A1%9C%20%EB%A7%8C%EB%93%A4%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94 HTTP/1.1" 200 OK
+Translated prompt: Please create a flyer background in Korean for the cafe's signature product, and use only one coffee image.
+INFO:     172.18.0.1:44482 - "GET /addhelper/accessdata/generate?prompt=%EC%B9%B4%ED%8E%98%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%20%EC%A0%84%EB%8B%A8%EC%A7%80%20%EB%B0%B0%EA%B2%BD%20%ED%95%9C%EA%B8%80%EB%A1%9C%20%EB%A7%8C%EB%93%A4%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94%20%EC%BB%A4%ED%94%BC%EC%9D%B4%EB%AF%B8%EC%A7%80%EB%8A%94%20%ED%95%9C%EA%B0%9C%EB%A7%8C%20%EC%82%AC%EC%9A%A9%ED%95%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94 HTTP/1.1" 200 OK
+Translated prompt: Please design a signature coffee flyer, but do not include any text.
+INFO:     172.18.0.1:56024 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%A0%84%EB%8B%A8%EC%A7%80%EB%A5%BC%20%EB%A7%8C%EB%93%A4%EB%90%98%2C%20%EB%AC%B8%EC%9E%90%EB%8A%94%20%EB%84%A3%EC%A7%80%20%EB%A7%90%EC%95%84%20%EC%A3%BC%EC%84%B8%EC%9A%94. HTTP/1.1" 200 OK
+Translated prompt: Please create a background for a coffee signature flyer, but do not include any text or photos of coffee.
+INFO:     172.18.0.1:57998 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%A0%84%EB%8B%A8%EC%A7%80%EC%9D%98%20%EB%B0%B0%EA%B2%BD%EC%9D%84%20%EB%A7%8C%EB%93%A4%EB%90%98%2C%20%EB%AC%B8%EC%9E%90%EC%99%80%20%EC%BB%A4%ED%94%BC%20%EC%82%AC%EC%A7%84%EC%9D%80%20%EB%84%A3%EC%A7%80%20%EB%A7%90%EC%95%84%20%EC%A3%BC%EC%84%B8%EC%9A%94 HTTP/1.1" 200 OK
+INFO:     185.226.197.73:37006 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53536 - "GET /actuator/gateway/routes HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51478 - "GET / HTTP/1.1" 200 OK
+Translated prompt: This is the background for an advertising image of a coffee signature product; please create it without any text or images of coffee.
+INFO:     172.18.0.1:33718 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%EC%9D%98%20%EA%B4%91%EA%B3%A0%20%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%9D%98%20%EB%B0%B0%EA%B2%BD%EC%9D%B8%EB%8D%B0%2C%20%EB%AC%B8%EC%9E%90%EC%99%80%20%EC%BB%A4%ED%94%BC%20%EC%9D%B4%EB%AF%B8%EC%A7%80%EB%8A%94%20%EC%A0%9C%EC%99%B8%ED%95%98%EA%B3%A0%20%EB%A7%8C%EB%93%A4%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94. HTTP/1.1" 200 OK
+Translated prompt: This is the background for an advertising image of the coffee signature product; please create it without any text or coffee.
+INFO:     172.18.0.1:40048 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%EC%9D%98%20%EA%B4%91%EA%B3%A0%20%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%9D%98%20%EB%B0%B0%EA%B2%BD%EC%9D%B8%EB%8D%B0%2C%20%EB%AC%B8%EC%9E%90%EC%99%80%20%EC%BB%A4%ED%94%BC%EB%8A%94%20%EC%A0%9C%EC%99%B8%ED%95%98%EA%B3%A0%20%EB%A7%8C%EB%93%A4%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94. HTTP/1.1" 200 OK

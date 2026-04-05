@@ -1,305 +1,120 @@
-# 코드 가독성, 유지보수성,간결성, 일관성, 확장성, 이식성을 고려하고 코드의 중복을 피하고 모듈화/클래스화/함수화 하여 작성한다.
+# 코드 가독성, 유지보수성, 간결성, 일관성, 확장성, 이식성을 고려하고 코드의 중복을 피하며 모듈화/클래스화/함수화하여 작성한다.
 
 ## 1. 문서 역할
 
-이 문서는 getPrj 프로젝트의 코딩 규칙(Convention) 문서입니다.
+이 문서는 getPrj 프로젝트의 Python/FastAPI 코딩 규칙(Convention) 문서입니다.
 
 포함 범위:
 
 - Python 코드 작성 규칙
+- FastAPI API 작성 규칙
 - 네이밍 규칙
-- 변수 범위별 이름 규칙
-- 함수 / 클래스 / 멤버 설계 기준
+- 함수/클래스/멤버 설계 기준
 
 포함하지 않는 범위:
 
-- 프로젝트 목적 및 배경 (READ.md에서 관리)
-- 전체 시스템 구조 및 기술 세부 사항 (TECH.md에서 관리)
-
+- 프로젝트 목적 및 배경 (README.md에서 관리)
+- 전체 시스템 구조 및 기술 세부 사항 (별도 기술 문서에서 관리)
 
 ## 2. 개발 원칙
 
-1) state 변경에 해당하는 Resapi는 Post를 원칙으로 합니다.
-2) backend와 frontend를 분리하여 개발한다.
-
-## 3. 기본 원칙
-
-3) 한 프로젝트 안에서는 네이밍 스타일을 섞지 않는다.
-4) 이 프로젝트는 다음 스타일을 기준으로 한다.
-
-- 상수: 대문자 + `_`
-- 전역 함수: 대문자 시작 + `_`
-- 클래스: PascalCase
-- 공개 메서드: `get/set/do + CamelCase`
-- 내부 메서드: `_name`
-- 파라미터/지역 변수: 소문자 시작 + 대문자 구분
-- 내부 멤버 변수: `self.__Name`
-- 외부 공개 멤버 변수: `self._Name`
-
-
+1) 상태를 변경하는 REST API는 POST/PUT/PATCH/DELETE를 사용한다.
+2) 조회성 API는 GET을 사용한다.
+3) backend와 frontend를 분리하여 개발한다.
+4) 한 프로젝트 안에서는 네이밍 스타일을 섞지 않는다.
 5) 의미가 같은 값은 범위가 달라도 핵심 단어를 유지한다.
+6) 함수/변수/클래스, 주요 로직에는 간결한 주석을 남긴다.
 
-6) 함수/변수/클래스 등에 대해서 간결한 주석을 명기한다.
-7) 주요 로직에도 간결한 주석을 명기한다.
+## 3. 네이밍 규칙 (Python 표준)
 
-
-
-## 4. 상수 규칙
-
-상수는 모두 대문자로 쓰고, 의미 구분은 `_` 로 한다.
+- 모듈/파일명: snake_case
+- 패키지명: 소문자
+- 클래스명: PascalCase
+- 함수명/메서드명: snake_case
+- 변수명(파라미터/지역/멤버): snake_case
+- 상수명: UPPER_SNAKE_CASE
+- 내부 전용 멤버/메서드: _leading_underscore
 
 예:
 
 ```python
-EPOCHS = 100
-CAT_NUMBER = 10
-DOG_NUMBER = 10
 MODEL_PATH = "..."
-APP_VERSION = "0004"
+
+class StableDiffusionService:
+    def __init__(self):
+        self._model_name = "sd35"
+
+    def change_image(self, input_image, strength):
+        return input_image
 ```
 
+## 4. 함수 작성 규칙
 
-
-## 5. 전역 함수 규칙
-
-전역 함수는 대문자로 시작하고, 단어 구분은 `_` 를 사용한다.
-
-예:
-
-```python
-def Load_Model():
-	pass
-
-def Get_Debug_Text():
-	pass
-
-def Build_Result_Data():
-	pass
-```
-
-전역 함수는 앱 전체에서 공통으로 쓰는 기능만 둔다.
-
-
-
-## 6. 클래스 규칙
-
-클래스 이름은 PascalCase를 사용한다.
-
-예:
-
-```python
-class CleanData:
-	pass
-
-class GetLoader:
-	pass
-
-class MnistModel:
-	pass
-```
-
-
-
-## 7. 멤버 변수 규칙
-
-### 7.1 내부 전용 멤버 변수
-
-기본적으로 클래스 변수는 외부에 공개하지 않는 것을 원칙으로 한다.
-
-형식:
-
-```python
-self.__Session
-self.__InputShape
-self.__DebugInfo
-```
-
-의미:
-
-- 클래스 내부에서만 직접 사용
-- 외부에서 바로 접근하지 않음
-
-
-
-### 7.2 외부 공개 멤버 변수
-
-정말 필요한 경우에만 다음 형태를 사용한다.
-
-```python
-self._ModelName
-```
-
-이 프로젝트에서는 가능한 한 getter/setter 또는 공개 메서드로 접근한다.
-
-
-
-## 8. 멤버 함수 규칙
-
-### 8.1 내부 전용 함수
-
-클래스 내부에서만 쓰는 함수는 `_` 로 시작한다.
-
-예:
-
-```python
-def _process(self):
-	pass
-
-def _preprocess(self):
-	pass
-```
-
-
-
-### 8.2 외부 공개 함수
-
-외부에 노출하는 함수는 다음 규칙을 사용한다.
-
-- `getMyName()`
-- `setMyName(name)`
-- `doJob()`
-
-원칙:
-
-- `get`, `set`, `do` 같은 동사형으로 시작.(delete, add 등 동사형)
-- strToInt 등은 간단하게 숫자를 사용해서 str2Int, obj2Str, obj2Int 등을 사용 한다.
-- 그 다음 단어는 대문자 시작
-- `_` 는 사용하지 않음
-
-예:
-
-```python
-def getMyName(self):
-	pass
-
-def setMyName(self, name):
-	pass
-
-def doPrediction(self, inputImage):
-	pass
-
-def predictImage(self, inputImage):
-	pass
-
-def str2Int(self, str):
-	pass
-```
-
-
-## 9. 파라미터 변수명 규칙
-
-파라미터 변수명은 소문자로 시작하고, 의미 구분은 대문자로 한다.
-
-예:
-
-```python
-def doJob(filePath, modelPath, inputImage):
-	pass
-```
-
-원칙:
-
-- 약어보다 의미가 분명한 이름을 사용
-- 너무 짧은 이름은 피함
-- 범위보다 역할이 드러나는 이름을 우선함
+1) 함수 이름은 동사 중심의 snake_case를 사용한다.
+2) 함수는 한 가지 책임만 갖도록 작성한다.
+3) 파라미터 이름은 역할이 드러나도록 작성한다.
+4) 불리언 파라미터는 의미가 분명한 이름을 사용한다.
 
 좋은 예:
 
-- `filePath`
-- `modelPath`
-- `inputImage`
-- `debugInfo`
+- `load_model`
+- `build_response_data`
+- `change_image`
+- `input_image`
+- `model_path`
 
-나쁜 예:
+피해야 할 예:
 
+- `DoJob`
 - `x`
 - `img`
-- `n`
 - `file_Path`
 
+## 5. 클래스/멤버 규칙
 
-
-## 10. 지역 변수명 규칙
-
-지역 변수도 소문자로 시작하고, 의미 구분은 대문자로 한다.
+1) 클래스명은 PascalCase를 사용한다.
+2) 멤버 변수는 기본적으로 외부에 직접 노출하지 않는다.
+3) 내부 구현 전용 멤버와 헬퍼 메서드는 `_` 접두어를 사용한다.
+4) Python에서는 getter/setter를 강제하지 않으며, 필요 시 `@property`를 사용한다.
 
 예:
 
 ```python
-filePath = "a.txt"
-modelInput = None
-predClass = 3
-rawScores = []
-debugText = "..."
+class ImageService:
+    def __init__(self):
+        self._pipe = None
+
+    def generate(self, prompt):
+        return self._pipe(prompt)
 ```
 
-원칙:
+## 6. FastAPI 규칙
 
-- 함수 안에서만 쓰더라도 의미가 보이게 작성
-- 파라미터와 이름 충돌이 나지 않게 작성
-- 가능하면 파라미터와 핵심 단어를 공유
+1) 라우터 핸들러 함수명은 snake_case를 사용한다.
+2) API 경로는 기존 클라이언트 호환성을 우선한다.
+3) 요청/응답 스키마는 Pydantic 모델로 정의한다.
+4) 입력 검증 실패는 4xx 에러로 반환한다.
+5) 서버 내부 예외는 로그로 남기고, 외부에는 필요한 정보만 노출한다.
 
+## 7. 변수 범위별 이름 규칙
 
+- 전역 상수: `MODEL_PATH`, `APP_VERSION`
+- 함수/메서드 파라미터: `input_image`, `model_path`, `strength`
+- 지역 변수: `raw_base64`, `input_bytes`, `applied_strength`
+- 클래스 내부 변수: `self._pipe`, `self._initialized`
 
-## 11. 변수 범위별 이름 구분 규칙
+## 8. 주석 규칙
 
-전역 상수:
+1) 코드 자체로 드러나는 내용은 주석으로 반복하지 않는다.
+2) 복잡한 처리, 성능/메모리 최적화, 외부 제약사항은 간결하게 주석으로 남긴다.
+3) 주석은 최신 코드와 항상 동기화한다.
 
-- `MODEL_PATH`
-- `APP_VERSION`
+## 9. 예외 규칙
 
-전역 함수:
-
-- `Load_Model()`
-- `Get_Debug_Text()`
-
-파라미터 변수:
-
-- `modelPath`
-- `inputImage`
-- `debugInfo`
-
-지역 변수:
-
-- `predClass`
-- `rawScores`
-- `debugText`
-
-클래스 내부 변수:
-
-- `self.__Session`
-- `self.__InputShape`
-
-외부 공개 멤버 변수:
-
-- `self._ModelName`
-
-
-
-## 12. 이름 일관성 규칙
-
-같은 의미의 이름은 범위가 달라도 가능한 한 같은 단어를 유지한다.
+외부 시스템과 주고받는 문자열 키/필드명은 계약(Contract)을 우선한다.
 
 예:
 
-- 파라미터: `modelPath`
-- 지역 변수: `currentModelPath`, `savedModelPath`
-
-- 파라미터: `inputImage`
-- 지역 변수: `grayImage`, `resizedImage`
-
-이름이 완전히 달라지면 추적이 어려우므로,
-같은 개념은 같은 핵심 단어를 반복해서 사용한다.
-
-
-
-## 13. 예외 규칙
-
-캐시 키, 세션 상태 키, JSON 딕셔너리 키처럼 외부 시스템과 주고받는 문자열 값은
-가독성과 호환성을 위해 소문자 또는 기존 포맷을 유지할 수 있다.
-
-예:
-
-- `"prediction_result"`
-- `"input_name"`
-- `"selected_scale"`
+- JSON 필드명: `image_base64`
+- 응답 키: `prediction_result`
+- 기존 API 경로: `/changeimage`

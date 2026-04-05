@@ -1,11 +1,28 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
- 
-app = FastAPI()
+
+from app.common.defines import SERVER_PORT
+
+from app.restapi.modelApi import  router as adhelper_router
+
+
+# 라우터 등록 및 서버 실행 설정
+
+app = FastAPI(title="addhelper Backend")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.include_router(adhelper_router)
+
 
 @app.get("/")
-def getRoot():
+def get_root():
     """루트 엔드포인트: 서비스 상태 확인용"""
     return {"message": "Hello, getPrj Backend!"}
 
@@ -17,8 +34,8 @@ def shutdown():
 
 
 if __name__ == "__main__":
-    # 환경변수 PORT가 있으면 해당 포트, 없으면 8119 사용
-    port = int(os.environ.get("BACKEND_PORT", 8119))
+    # 환경변수 PORT가 있으면 해당 포트, 없으면 backend.ini의 [server] port 사용
+    port = int(os.environ.get("BACKEND_PORT", SERVER_PORT))
     #export BACKEND_PORT=8000
     print(f"(1.0)genPrj Backend Server is running on http://localhost:{port}")
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
