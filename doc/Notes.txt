@@ -572,3 +572,10 @@ async def changeimage(req: ChangeImageRequest):
     return Response(content=img_byte_arr.getvalue(), media_type="image/png")
 
 
+모든 modelApi.py 에서 응담을 , 
+statusCode : 200(정상), 100( 비정상)
+statusMsg  : "OK"(정상), "이상"(실제 비정상일 때 나타나는 메시지)
+datalist   : 데이터베이스등 배열을 리턴할때,(없으면 [] )
+data       : 생성 메시지 또는 이미지
+응답을 위와 같은  만들어 주세요.
+

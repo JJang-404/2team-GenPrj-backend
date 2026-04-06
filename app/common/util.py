@@ -271,13 +271,13 @@ class ZipOperation:
 
 # 성공 응답 생성 (FastAPI용)
 def ok_response(extra: dict[str, Any] | None = None) -> dict[str, Any]:
-    out = {"statusCode": "200", "statusMsg": "OK"}
+    out = {"statusCode": 200, "statusMsg": "OK", "datalist": [], "data": None}
     if extra: out.update(extra)
     return out
 
 # 실패 응답 생성 (FastAPI용)
 def error_response(message: str) -> dict[str, Any]:
-    return {"statusCode": "100", "statusMsg": message}
+    return {"statusCode": 100, "statusMsg": message, "datalist": [], "data": None}
 
 # 문자열 파라미터를 딕셔너리로 변환
 def to_map(req_param: str | dict[str, Any]) -> dict[str, Any]:

@@ -1,7 +1,7 @@
 
 import base64
 import json
-from fastapi import APIRouter, Body, HTTPException
+from fastapi import APIRouter
 from fastapi.responses import JSONResponse, Response
 from typing import Any
 import configparser
@@ -36,8 +36,8 @@ def _get_engine_base_url() -> str:
 
 # 필요에 따라 추가 엔드포인트 구현 가능
 @router.get("/test")
-def test_connection() -> str:
-   return "접속 테스트 성공"
+def test_connection() -> dict[str, Any]:
+    return get_ok_response({"data": "접속 테스트 성공"})
  
 
 # backend.ini의 [engine] engine_url(기본값: https://nabidream.duckdns.org/model/) 업스트림의 /generate를 호출하여 이미지를 반환합니다.
@@ -56,7 +56,7 @@ def generate_image(prompt: str) -> Response:
         image_url = f"{engine_url}/generate?{query}"
         request = Request(image_url, method="GET")
 
-        with urlopen(request, timeout=180) as upstream_response:
+        with urlopen(request, timeout=300) as upstream_response:
             body = upstream_response.read()
             content_type = upstream_response.headers.get_content_type()
 
@@ -78,11 +78,17 @@ def generate_image(prompt: str) -> Response:
 @router.post("/changeimage")
 async def changeimage(req: ChangeImageRequest) -> Response:
     if req.strength < 0.0 or req.strength > 1.0:
-        raise HTTPException(status_code=400, detail="strength는 0.0~1.0 범위여야 합니다.")
+        return JSONResponse(
+            status_code=400,
+            content=get_error_response("strength는 0.0~1.0 범위여야 합니다."),
+        )
 
     raw_base64 = (req.image_base64 or "").strip()
     if not raw_base64:
-        raise HTTPException(status_code=400, detail="image_base64는 필수입니다.")
+        return JSONResponse(
+            status_code=400,
+            content=get_error_response("image_base64는 필수입니다."),
+        )
 
     if "," in raw_base64:
         raw_base64 = raw_base64.split(",", 1)[1]
@@ -90,8 +96,11 @@ async def changeimage(req: ChangeImageRequest) -> Response:
     try:
         # 유효한 base64 문자열인지 선검증 후 업스트림으로 전달합니다.
         base64.b64decode(raw_base64, validate=True)
-    except Exception as exc:
-        raise HTTPException(status_code=400, detail="유효한 base64 이미지가 아닙니다.") from exc
+    except Exception:
+        return JSONResponse(
+            status_code=400,
+            content=get_error_response("유효한 base64 이미지가 아닙니다."),
+        )
 
     translator = OpenAiJob()
     translated_prompt = translator.change_kor_to_eng(req.prompt)
@@ -124,9 +133,7 @@ async def changeimage(req: ChangeImageRequest) -> Response:
             return JSONResponse(status_code=502, content=out_map)
 
         return Response(content=body, media_type=content_type)
-    except HTTPException:
-        raise
     except Exception as ex:
-        raise HTTPException(status_code=500, detail=str(ex)) from ex
+        return JSONResponse(status_code=500, content=get_error_response(str(ex)))
 
 

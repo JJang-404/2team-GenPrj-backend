@@ -1,39 +1,229 @@
 nohup: ignoring input
-INFO:     Started server process [506]
+INFO:     Started server process [6500]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 (1.0)genPrj Backend Server is running on http://localhost:8000
-Translated prompt: Chinese restaurant
-INFO:     172.18.0.1:37194 - "GET /addhelper/accessdata/generate?prompt=%EC%A4%91%EA%B5%AD%EC%A7%91 HTTP/1.1" 200 OK
-Translated prompt: Chinese restaurant
-INFO:     172.18.0.1:33552 - "GET /addhelper/accessdata/generate?prompt=%EC%A4%91%EA%B5%AD%EC%A7%91 HTTP/1.1" 200 OK
-Translated prompt: Arcade advertisement
-INFO:     172.18.0.1:57376 - "GET /addhelper/accessdata/generate?prompt=%EC%98%A4%EB%9D%BD%EC%8B%A4%20%EA%B4%91%EA%B3%A0 HTTP/1.1" 200 OK
-Translated prompt: Coffee shop menu background
-INFO:     172.18.0.1:34646 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%A0%84%EB%AC%B8%EC%A0%90%20%EB%A9%94%EB%89%B4%20%EB%B0%B0%EA%B2%BD HTTP/1.1" 200 OK
-Translated prompt: Background for cafe signature product flyer
+Translated prompt: Upscale hanwoo restaurant exterior at dusk, elegant wooden facade and warm lanterns, Korean calligraphy sign, cinematic lighting, photorealistic, wide-angle, high detail
 
-Alternative phrasings:
-- Cafe signature product flyer background
-- Background for a cafe's signature product flyer
-INFO:     172.18.0.1:42852 - "GET /addhelper/accessdata/generate?prompt=%EC%B9%B4%ED%8E%98%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%20%EC%A0%84%EB%8B%A8%EC%A7%80%20%EB%B0%B0%EA%B2%BD HTTP/1.1" 200 OK
-WARNING:  Invalid HTTP request received.
-INFO:     147.182.196.155:52200 - "GET / HTTP/1.1" 200 OK
-INFO:     147.182.196.155:52202 - "GET /favicon.ico HTTP/1.1" 404 Not Found
-INFO:     172.18.0.1:43058 - "GET / HTTP/1.1" 200 OK
-Translated prompt: Please create the background for the cafe's signature product flyer in Hangul (Korean).
-INFO:     172.18.0.1:35316 - "GET /addhelper/accessdata/generate?prompt=%EC%B9%B4%ED%8E%98%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%20%EC%A0%84%EB%8B%A8%EC%A7%80%20%EB%B0%B0%EA%B2%BD%20%ED%95%9C%EA%B8%80%EB%A1%9C%20%EB%A7%8C%EB%93%A4%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94 HTTP/1.1" 200 OK
-Translated prompt: Please create a flyer background in Korean for the cafe's signature product, and use only one coffee image.
-INFO:     172.18.0.1:44482 - "GET /addhelper/accessdata/generate?prompt=%EC%B9%B4%ED%8E%98%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%20%EC%A0%84%EB%8B%A8%EC%A7%80%20%EB%B0%B0%EA%B2%BD%20%ED%95%9C%EA%B8%80%EB%A1%9C%20%EB%A7%8C%EB%93%A4%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94%20%EC%BB%A4%ED%94%BC%EC%9D%B4%EB%AF%B8%EC%A7%80%EB%8A%94%20%ED%95%9C%EA%B0%9C%EB%A7%8C%20%EC%82%AC%EC%9A%A9%ED%95%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94 HTTP/1.1" 200 OK
-Translated prompt: Please design a signature coffee flyer, but do not include any text.
-INFO:     172.18.0.1:56024 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%A0%84%EB%8B%A8%EC%A7%80%EB%A5%BC%20%EB%A7%8C%EB%93%A4%EB%90%98%2C%20%EB%AC%B8%EC%9E%90%EB%8A%94%20%EB%84%A3%EC%A7%80%20%EB%A7%90%EC%95%84%20%EC%A3%BC%EC%84%B8%EC%9A%94. HTTP/1.1" 200 OK
-Translated prompt: Please create a background for a coffee signature flyer, but do not include any text or photos of coffee.
-INFO:     172.18.0.1:57998 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%A0%84%EB%8B%A8%EC%A7%80%EC%9D%98%20%EB%B0%B0%EA%B2%BD%EC%9D%84%20%EB%A7%8C%EB%93%A4%EB%90%98%2C%20%EB%AC%B8%EC%9E%90%EC%99%80%20%EC%BB%A4%ED%94%BC%20%EC%82%AC%EC%A7%84%EC%9D%80%20%EB%84%A3%EC%A7%80%20%EB%A7%90%EC%95%84%20%EC%A3%BC%EC%84%B8%EC%9A%94 HTTP/1.1" 200 OK
-INFO:     185.226.197.73:37006 - "GET / HTTP/1.1" 200 OK
-INFO:     172.18.0.1:53536 - "GET /actuator/gateway/routes HTTP/1.1" 404 Not Found
-INFO:     172.18.0.1:51478 - "GET / HTTP/1.1" 200 OK
-Translated prompt: This is the background for an advertising image of a coffee signature product; please create it without any text or images of coffee.
-INFO:     172.18.0.1:33718 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%EC%9D%98%20%EA%B4%91%EA%B3%A0%20%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%9D%98%20%EB%B0%B0%EA%B2%BD%EC%9D%B8%EB%8D%B0%2C%20%EB%AC%B8%EC%9E%90%EC%99%80%20%EC%BB%A4%ED%94%BC%20%EC%9D%B4%EB%AF%B8%EC%A7%80%EB%8A%94%20%EC%A0%9C%EC%99%B8%ED%95%98%EA%B3%A0%20%EB%A7%8C%EB%93%A4%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94. HTTP/1.1" 200 OK
-Translated prompt: This is the background for an advertising image of the coffee signature product; please create it without any text or coffee.
-INFO:     172.18.0.1:40048 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EC%8B%9C%EA%B7%B8%EB%8B%88%EC%B2%98%20%EC%83%81%ED%92%88%EC%9D%98%20%EA%B4%91%EA%B3%A0%20%EC%9D%B4%EB%AF%B8%EC%A7%80%EC%9D%98%20%EB%B0%B0%EA%B2%BD%EC%9D%B8%EB%8D%B0%2C%20%EB%AC%B8%EC%9E%90%EC%99%80%20%EC%BB%A4%ED%94%BC%EB%8A%94%20%EC%A0%9C%EC%99%B8%ED%95%98%EA%B3%A0%20%EB%A7%8C%EB%93%A4%EC%96%B4%20%EC%A3%BC%EC%84%B8%EC%9A%94. HTTP/1.1" 200 OK
+Cozy traditional Korean interior, low wooden tables and ondol seating, marbled hanwoo sizzling on tabletop grill, glowing embers and steam, warm ambient light, ultra-realistic macro detail
+
+Close-up of hanwoo ribeye searing on cast-iron grill, caramelized crust, wisps of smoke, grilled garlic and sesame, shallow depth of field, 85mm food photography, hyper-realistic
+
+Minimalist fine-dining hanwoo course, thinly sliced raw beef arranged artfully with edible flowers and delicate sauces on ceramic plate, soft natural window light, high-resolution, elegant composition
+
+Chef in white uniform expertly slicing perfectly seared hanwoo on wooden board, focused expression, motion-blur knife, warm kitchen lighting, documentary-style photorealism
+
+Top-down festive hanwoo BBQ table, assorted premium cuts, colorful banchan bowls, soju bottle and glasses, steam rising, vibrant colors, 35mm, cozy convivial atmosphere
+INFO:     172.18.0.1:58500 - "GET /addhelper/model/generate?prompt=%ED%95%9C%EC%9A%B0%20%EC%9A%94%EB%A6%AC%20%EC%A0%84%EB%AC%B8%EC%A0%90 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:40528 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:49076 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45778 - "GET /aaa9 HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45784 - "GET /aab9 HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48344 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:48346 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:54822 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:43436 - "GET /?XDEBUG_SESSION_START=phpstorm HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47242 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47254 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47258 - "GET /server-status HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47266 - "GET /config.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47282 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47288 - "GET /telescope/requests HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47304 - "GET /info.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44812 - "GET /.env.old HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:33482 - "GET /wp-login.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:43440 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:60390 - "GET /robots.txt HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37522 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60098 - "GET /Dr0v HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:43052 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:46886 - "GET /actuator/gateway/routes HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:42800 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:48128 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+Translated prompt: - Photorealistic close-up of steaming Korean dumplings (mandu) in a bamboo steamer, translucent glossy skin, delicate handmade pleats, warm golden steam, macro, 50mm, shallow depth of field, high detail.
+
+- Cozy dumpling specialty restaurant interior, wooden tables, open kitchen with chef folding mandu, soft ambient lantern light, customers enjoying, cinematic warm tones, wide-angle.
+
+- Neon-lit storefront at night with large "Mandu" sign in Hangul, steam wafting from doorway, bustling urban street, rain-slick pavement reflections, moody cinematic lighting.
+
+- Top-down food photography of assorted dumplings — steamed, pan-fried, and boiled — arranged on rustic wooden board with dipping sauces, vibrant colors, high-detail, natural light.
+
+- Extreme close-up of a crispy golden pan-fried dumpling being torn open, juicy pork and vegetable filling visible, sauce drip, macro, dramatic lighting, ultra-realistic texture.
+
+- Minimalist editorial shot: chopsticks lifting a steamed mandu above a small soy-chili dipping bowl, moody background, shallow depth of field, high-contrast, elegant composition.
+
+- Chef action shot: hands pleating dumpling dough with flour-dusted fingers, motion blur, warm kitchen lighting, documentary-style realism, high detail.
+
+- Rustic street food stall scene: vendor steaming dumplings in metal trays, handwritten menu board, smoky steam and warm lantern glow, bustling crowd, atmospheric realism.
+
+- Fine-art illustration of a mandu platter with stylized steam swirls, ink-brush textures, muted palette, modern Korean aesthetic, clean composition.
+
+- Ultra-detailed macro of dumpling filling cross-section, layers of pork, scallion, garlic, glistening juices, photorealistic texture, studio lighting, 100mm equivalent.
+INFO:     172.18.0.1:53428 - "GET /addhelper/model/generate?prompt=%EB%A7%8C%EB%91%90%20%EC%9A%94%EB%A6%AC%20%EC%A0%84%EB%AC%B8%EC%A0%90 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54356 - "GET / HTTP/1.1" 200 OK
+Translated prompt: Rustic steakhouse interior at golden hour — dark wood tables, leather booths, open kitchen with visible flames, sizzling steak on cast-iron skillet, warm cinematic lighting, shallow depth of field, photorealistic, ultra-detailed, 35mm, 8k
+
+Close-up seared ribeye, medium-rare, charred crust, glistening juices and herb butter melting, smoke wisps, macro lens, studio lighting, hyperrealistic detail
+
+Upscale modern steakhouse exterior at night, neon "Steakhouse" sign, glass facade, warm interior glow, rain-soaked pavement reflecting lights, cinematic long exposure, photorealistic
+
+Chef plating tomahawk steak — dramatic close-up, gloved hands using tweezers to place microgreens, artistic composition, dramatic side lighting, 50mm, ultra-detailed, photorealistic
+
+Cozy intimate table for two in steakhouse, candlelight, red wine glasses, sizzling steak on a platter, soft bokeh background, warm ambience, cinematic, photorealistic
+
+Open-fire grill station with chefs, roaring flames, steel tongs flipping steaks, smoky haze, dynamic motion, gritty realism, high contrast, photorealistic
+
+Vintage steakhouse chalkboard menu, hand-lettered typography and sketches of cuts, warm wood frame, natural soft lighting, high-detail stylized photorealism
+
+Top-down flatlay of a steak dinner — sliced sirloin, roasted vegetables, mashed potatoes, dipping sauce, linen napkin on rustic table, natural daylight, hyperrealistic, 8k
+INFO:     172.18.0.1:59514 - "GET /addhelper/model/generate?prompt=%EC%8A%A4%ED%85%8C%EC%9D%B4%ED%81%AC%20%EC%9A%94%EB%A6%AC%20%EC%A0%84%EB%AC%B8%EC%A0%90 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52328 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:44888 - "HEAD / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:60304 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53286 - "GET /.env.bak HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:53298 - "GET /.env.production.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51752 - "GET /.env.secret HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51760 - "GET /assets../.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51776 - "GET /api/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51780 - "GET /.env.template HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51782 - "GET /.env.backup HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51798 - "GET /.env.ci HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52744 - "GET /.env.development.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52756 - "GET /admin/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52764 - "GET /docker-compose.prod.yml HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52766 - "GET /.env.preprod HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52780 - "GET /.env.production HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52784 - "GET /.env_sample HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52798 - "GET /.env.sandbox HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48648 - "GET /backup/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48658 - "GET /public/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48662 - "GET /files/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48670 - "GET /.env.qa HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48684 - "GET /.envrc HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48686 - "GET /.env.save HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59328 - "GET /.env.stage HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59344 - "GET /.env.uat HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59358 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59374 - "GET /.env.dev.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59376 - "GET /.env.dist HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59378 - "GET /build/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59394 - "GET /core/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59396 - "GET /server/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59410 - "GET /dev/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34860 - "GET /.env.prod HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34874 - "GET /prod/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34880 - "GET /.env.live HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34894 - "GET /.env.prod.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34898 - "GET /.env.test HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34906 - "GET /config/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60604 - "GET /configuration/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60618 - "GET /static../.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60634 - "GET /app/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60640 - "GET /media/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60656 - "GET /.env.testing.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60662 - "GET /config/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34584 - "GET /config.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34588 - "GET /.env.default HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34604 - "GET /data/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34614 - "GET /www/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34622 - "GET /.env.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34632 - "GET /settings/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34648 - "GET /project/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34656 - "GET /src/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:41188 - "GET /.env.dev HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:41202 - "GET /api/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:41208 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:41216 - "GET /.env.config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:41222 - "GET /cms/.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:41236 - "GET /media../.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48190 - "GET /.env.staging.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48200 - "GET /.env.testing HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:48214 - "GET /.aws/credentials HTTP/1.1" 404 Not Found
+Translated prompt: - Cozy vintage pizzeria exterior at dusk, warm glowing neon "Pizzeria" sign, brick facade and checkered awning, warm streetlight, cinematic wide-angle, film grain, 35mm, photorealistic  
+- Modern artisan pizza shop interior, open kitchen with wood-fired oven, pizzaiolo tossing dough mid-air, flour motes in warm tungsten light, ultra-detailed, 50mm, shallow depth of field, photoreal  
+- Overhead close-up of freshly baked Margherita on rustic wooden table, melted mozzarella, basil leaves, olive oil drizzle, hands reaching in, natural window light, 85mm macro, high-detail food photography  
+- Neon retro pizza parlor at night, vinyl booths and checkered floor, steam rising from hot pizzas, moody cinematic lighting with synthwave color palette, vibrant, 35mm film look  
+- Cute kawaii anime-style pizza shop interior, pastel palette, smiling staff, colorful display of pizzas, soft rim light, cel-shaded, dynamic composition, high detail  
+- Minimalist vector-style pizza shop icon, flat warm red-orange palette, bold clean lines, simple storefront silhouette, modern branding illustration
+INFO:     172.18.0.1:40754 - "GET /addhelper/model/generate?prompt=%ED%94%BC%EC%9E%90%20%EA%B0%80%EA%B2%8C HTTP/1.1" 200 OK
+INFO:     172.18.0.1:34068 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:41000 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45152 - "GET /robots.txt HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:57254 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34872 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:36546 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36556 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:55860 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33156 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:34548 - "GET /actuator/health HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47004 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:60472 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:60484 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60488 - "GET /.env.bak HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60494 - "GET /.env.save HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60508 - "GET /.env.backup HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60514 - "GET /backend/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60524 - "GET /admin/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60538 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60544 - "GET /wp-config.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60548 - "GET /config.js HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60560 - "GET /aws-config.js HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60576 - "GET /aws.config.js HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60580 - "GET /_debugbar/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60592 - "GET /debugbar/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60598 - "GET /debug/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60606 - "GET /phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60618 - "GET /info.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60632 - "GET /test.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60640 - "GET /.aws/credentials HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60648 - "GET /.aws/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60650 - "GET /aws-credentials HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60654 - "GET /aws.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60668 - "GET /.s3cfg HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47528 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34142 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:38804 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:38816 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:42822 - "POST /ajax HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:33296 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35214 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56888 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:46572 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:46574 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:55470 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55476 - "GET /aaa9 HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:55484 - "GET /aab9 HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50402 - "GET /aaa9 HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50408 - "GET /aab9 HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59054 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54014 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:37722 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:48010 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47808 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:34612 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:37240 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:49724 - "GET /developmentserver/metadatauploader HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52082 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59100 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:53848 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53858 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:56238 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56092 - "GET /owa/auth/logon.aspx HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44878 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:34982 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59048 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:60998 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:53496 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:46298 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:48582 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:48584 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:48596 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:57422 - "GET /WuEL HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:57436 - "GET /a HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34932 - "GET /download/file.ext HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34946 - "GET /SiteLoader HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34962 - "GET /mPlayer HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:35924 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35926 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:42638 - "GET /security.txt HTTP/1.1" 404 Not Found
