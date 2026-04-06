@@ -6,11 +6,10 @@ from fastapi.responses import JSONResponse, Response
 from typing import Any
 import configparser
 import os
-from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 from app.common import defines
 from app.common.util import ok_response, error_response
-from app.models.openapi import ChangeImageRequest, OpenAiJob
+from app.models.openapi import ChangeImageRequest, OpenAiJob, PromptBundle
 
 router = APIRouter(prefix="/addhelper/model", tags=["addhelper-model"])
 
@@ -34,6 +33,22 @@ def _get_engine_base_url() -> str:
     return (url or default_url).rstrip("/")
 
 
+def _build_prompt_bundle(
+    prompt: str,
+    positive_prompt: str | None = None,
+    negative_prompt: str | None = None,
+) -> PromptBundle:
+    translator = OpenAiJob()
+    prompt_bundle = translator.build_prompt_bundle(
+        prompt=prompt,
+        positive_prompt=positive_prompt,
+        negative_prompt=negative_prompt,
+    )
+    print(f"Positive prompt: {prompt_bundle.positive_prompt}")
+    print(f"Negative prompt: {prompt_bundle.negative_prompt}")
+    return prompt_bundle
+
+
 # 필요에 따라 추가 엔드포인트 구현 가능
 @router.get("/test")
 def test_connection() -> dict[str, Any]:
@@ -42,19 +57,30 @@ def test_connection() -> dict[str, Any]:
 
 # backend.ini의 [engine] engine_url(기본값: https://nabidream.duckdns.org/model/) 업스트림의 /generate를 호출하여 이미지를 반환합니다.
 @router.get("/generate")
-def generate_image(prompt: str) -> Response:
+def generate_image(
+    prompt: str,
+    positive_prompt: str | None = None,
+    negative_prompt: str | None = None,
+) -> Response:
     try:
-
-        # str로 들어온 prompt가 한글이므로 OpenAiJob 의 메소드를 이용해서 영문으로 변경해 주세요
-        
-        translator = OpenAiJob()
-        prompt = translator.change_kor_to_eng(prompt)
-        print(f"Translated prompt: {prompt}")
+        prompt_bundle = _build_prompt_bundle(
+            prompt=prompt,
+            positive_prompt=positive_prompt,
+            negative_prompt=negative_prompt,
+        )
         # 업스트림 이미지 생성 API 결과를 그대로 프록시하여 실제 이미지를 반환합니다.
-        query = urlencode({"prompt": prompt})
         engine_url = _get_engine_base_url()
-        image_url = f"{engine_url}/generate?{query}"
-        request = Request(image_url, method="GET")
+        image_url = f"{engine_url}/generate"
+        payload = {
+            "positive_prompt": prompt_bundle.positive_prompt,
+            "negative_prompt": prompt_bundle.negative_prompt,
+        }
+        request = Request(
+            image_url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
 
         with urlopen(request, timeout=300) as upstream_response:
             body = upstream_response.read()
@@ -102,15 +128,17 @@ async def changeimage(req: ChangeImageRequest) -> Response:
             content=get_error_response("유효한 base64 이미지가 아닙니다."),
         )
 
-    translator = OpenAiJob()
-    translated_prompt = translator.change_kor_to_eng(req.prompt)
-    print(f"Translated prompt: {translated_prompt}")
-
     try:
+        prompt_bundle = _build_prompt_bundle(
+            prompt=req.prompt,
+            positive_prompt=req.positive_prompt,
+            negative_prompt=req.negative_prompt,
+        )
         engine_url = _get_engine_base_url()
         image_url = f"{engine_url}/changeimage"
         payload = {
-            "prompt": translated_prompt,
+            "positive_prompt": prompt_bundle.positive_prompt,
+            "negative_prompt": prompt_bundle.negative_prompt,
             "image_base64": raw_base64,
             "strength": req.strength,
         }

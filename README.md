@@ -106,6 +106,12 @@ GET /addhelper/model/test
 GET /addhelper/model/generate?prompt=coffee
 ```
 
+선택적으로 아래 쿼리도 함께 보낼 수 있습니다.
+
+```text
+GET /addhelper/model/generate?prompt=coffee&positive_prompt=cinematic%20coffee%20photo&negative_prompt=blurry%2C%20text
+```
+
 정상 응답은 JSON이 아니라 이미지 바이너리입니다.
 
 ```text
@@ -142,6 +148,8 @@ Content-Type: application/json
 ```json
 {
 	"prompt": "카툰 스타일로 바꿔주세요",
+	"positive_prompt": "cartoon style, clean outline, vivid color",
+	"negative_prompt": "blurry, low quality, watermark, text",
 	"image_base64": "iVBORw0KGgoAAAANSUhEUg...",
 	"strength": 0.45
 }
