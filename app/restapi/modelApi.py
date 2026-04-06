@@ -9,7 +9,7 @@ import os
 from urllib.request import Request, urlopen
 from app.common import defines
 from app.common.util import ok_response, error_response
-from app.models.openapi import ChangeImageRequest, OpenAiJob, PromptBundle
+from app.models.openai import ChangeImageRequest, OpenAiJob, PromptBundle
 
 router = APIRouter(prefix="/addhelper/model", tags=["addhelper-model"])
 

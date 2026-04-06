@@ -3,12 +3,13 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 from typing import Any
-from backend.common.defines import DB_FILE_PATH
+from app.common.defines import DB_FILE_PATH
 
 class SQLiteDB:
 	def __init__(self)-> None:
 		# DB 파일 경로 설정 및 쿼리 큐 초기화
 		self.db_path = Path(DB_FILE_PATH)
+		self.db_path.parent.mkdir(parents=True, exist_ok=True)
 		self._sql_queue: list[str] = []
 
 	# SQLite 연결 객체 생성
@@ -92,3 +93,114 @@ class SQLiteDB:
 			return count
 
 		return False
+
+	# 로그인 ID 기준 단건 조회
+	def GetUserByLoginId(self, user_id: str) -> dict[str, Any] | None:
+		sql = "SELECT user_no, user_id, user_name, user_passwd FROM users_tbl WHERE user_id = ?"
+		rows = self.SelectSQL(sql, (user_id,))
+		return rows[0] if rows else None
+
+	# 회원가입용 사용자 추가 후 생성된 user_no 반환
+	def InsertUser(self, user_id: str, user_name: str, user_passwd: str) -> int:
+		sql = "INSERT INTO users_tbl (user_id, user_name, user_passwd) VALUES (?, ?, ?)"
+		with self._connect() as conn:
+			cur = conn.cursor()
+			cur.execute(sql, (user_id, user_name, user_passwd))
+			conn.commit()
+			last_row_id = cur.lastrowid
+			if last_row_id is None:
+				return 0
+			return int(last_row_id)
+
+	# 로그인용 자격 검증
+	def VerifyUser(self, user_id: str, user_passwd: str) -> dict[str, Any] | None:
+		sql = "SELECT user_no, user_id, user_name FROM users_tbl WHERE user_id = ? AND user_passwd = ?"
+		rows = self.SelectSQL(sql, (user_id, user_passwd))
+		return rows[0] if rows else None
+
+	# 로그인 ID 기준 단건 조회 (호환 메서드)
+	def GetUserById(self, user_id: str) -> dict[str, Any] | None:
+		sql = "SELECT user_no, user_id, user_name FROM users_tbl WHERE user_id = ?"
+		rows = self.SelectSQL(sql, (user_id,))
+		return rows[0] if rows else None
+
+	# 이미지 메타데이터 저장
+	def InsertUserImage(
+		self,
+		user_id: str,
+		original_name: str,
+		file_desc: str,
+		stored_name: str,
+		stored_path: str,
+		content_type: str,
+		file_ext: str,
+		file_size: int,
+	) -> int:
+		sql = (
+			"INSERT INTO user_images_tbl "
+			"(user_id, original_name, file_desc, stored_name, stored_path, content_type, file_ext, file_size) "
+			"VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+		)
+		with self._connect() as conn:
+			cur = conn.cursor()
+			cur.execute(
+				sql,
+				(user_id, original_name, file_desc, stored_name, stored_path, content_type, file_ext, file_size),
+			)
+			conn.commit()
+			last_row_id = cur.lastrowid
+			if last_row_id is None:
+				return 0
+			return int(last_row_id)
+
+	# image_id 기준 이미지 메타 조회
+	def GetUserImageById(self, image_id: int) -> dict[str, Any] | None:
+		sql = (
+			"SELECT image_id, user_id, original_name, file_desc, stored_name, stored_path, content_type, file_ext, file_size, created_at "
+			"FROM user_images_tbl WHERE image_id = ?"
+		)
+		rows = self.SelectSQL(sql, (image_id,))
+		return rows[0] if rows else None
+
+	# 사용자별 이미지 목록 조회
+	def GetUserImages(self, user_id: str) -> list[dict[str, Any]]:
+		sql = (
+			"SELECT image_id, user_id, original_name, file_desc, stored_name, stored_path, content_type, file_ext, file_size, created_at "
+			"FROM user_images_tbl WHERE user_id = ? ORDER BY image_id DESC"
+		)
+		return self.SelectSQL(sql, (user_id,))
+
+	# user_id, 파일명, 설명 키워드로 이미지 목록 조회
+	def FindUserImages(
+		self,
+		user_id: str | None = None,
+		file_name: str | None = None,
+		file_desc: str | None = None,
+	) -> list[dict[str, Any]]:
+		base_sql = (
+			"SELECT image_id, user_id, original_name, file_desc, stored_name, stored_path, content_type, file_ext, file_size, created_at "
+			"FROM user_images_tbl"
+		)
+		where_parts: list[str] = []
+		params: list[Any] = []
+
+		if user_id is not None:
+			where_parts.append("user_id = ?")
+			params.append(user_id)
+
+		normalized_name = (file_name or "").strip()
+		if normalized_name:
+			where_parts.append("(original_name LIKE ? OR stored_name LIKE ? OR stored_path LIKE ?)")
+			like_value = f"%{normalized_name}%"
+			params.extend([like_value, like_value, like_value])
+
+		normalized_desc = (file_desc or "").strip()
+		if normalized_desc:
+			where_parts.append("file_desc LIKE ?")
+			params.append(f"%{normalized_desc}%")
+
+		if where_parts:
+			base_sql += " WHERE " + " AND ".join(where_parts)
+
+		base_sql += " ORDER BY image_id DESC"
+		return self.SelectSQL(base_sql, tuple(params))

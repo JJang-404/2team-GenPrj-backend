@@ -6,6 +6,9 @@ import os
 from app.common.defines import SERVER_PORT
 
 from app.restapi.modelApi import  router as adhelper_router
+from app.restapi.adverApi import router as adver_router
+from app.restapi.imageApi import router as image_router
+from app.restapi.userApi import router as user_router
 
 
 # 라우터 등록 및 서버 실행 설정
@@ -19,6 +22,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(adhelper_router)
+app.include_router(adver_router)
+app.include_router(image_router)
+app.include_router(user_router)
 
 
 @app.get("/")
