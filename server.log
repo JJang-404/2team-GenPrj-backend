@@ -1,28 +1,28 @@
 nohup: ignoring input
-INFO:     Started server process [125039]
+INFO:     Started server process [5611]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
 (1.0)genPrj Backend Server is running on http://localhost:8000
-INFO:     172.18.0.1:59842 - "GET /addhelper/accessdata/generate?prompt=%EC%BB%A4%ED%94%BC%20%EA%B0%80%EA%B2%8C HTTP/1.1" 404 Not Found
-INFO:     172.18.0.1:55916 - "GET /addhelper/model/test HTTP/1.1" 200 OK
-INFO:     172.18.0.1:55920 - "GET /favicon.ico HTTP/1.1" 404 Not Found
-INFO:     172.18.0.1:33370 - "GET /addhelper/model/test HTTP/1.1" 200 OK
-Translated prompt: - Close-up of a steaming cup of black coffee on a rustic wooden table, visible crema and steam wisps, warm morning sunlight, shallow depth of field, 50mm, photorealistic, 8k, soft bokeh.  
-- Top-down flat lay of latte art heart in a ceramic cup, scattered coffee beans and biscotti, soft natural light, minimal background, 35mm, cozy aesthetic, ultra-detailed.  
-- Candid barista pouring latte art in a busy café, motion blur on hand, warm ambient lights, cinematic, shallow depth of field, documentary style.  
-- Macro of roasted coffee beans, oily texture and cracked surface, dramatic side lighting, extreme detail, studio backdrop, 100mm macro, high contrast.  
-- Vintage coffee shop interior at golden hour, sunbeams through windows, patrons reading, film grain, moody warm tones, 35mm, cinematic composition.  
-- Minimalist modern espresso shot on black slate, perfect crema, hard rim lighting, high contrast product photography, studio, 85mm, crisp detail.  
-- Iced coffee in a tall glass with condensation and a lemon slice, bright summer vibe, saturated colors, natural light, photorealistic, refreshingly crisp.  
-- Surreal scene: giant coffee cup floating above a city skyline at dawn, steam forming cloud shapes, painterly cinematic lighting, epic scale, hyper-detailed.
-INFO:     172.18.0.1:35720 - "GET /addhelper/model/generate?prompt=%EC%BB%A4%ED%94%BC HTTP/1.1" 200 OK
-INFO:     172.18.0.1:58504 - "GET /addhelper/model/test HTTP/1.1" 200 OK
-INFO:     172.18.0.1:41144 - "GET /addhelper/model/test HTTP/1.1" 200 OK
-INFO:     172.18.0.1:39076 - "GET /addhelper/model/test HTTP/1.1" 200 OK
-INFO:     172.18.0.1:41272 - "GET /addhelper/model/test HTTP/1.1" 200 OK
-INFO:     172.18.0.1:52688 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
-INFO:     172.18.0.1:46422 - "GET / HTTP/1.1" 200 OK
-INFO:     172.18.0.1:40984 - "GET /aaa9 HTTP/1.1" 404 Not Found
-INFO:     172.18.0.1:40990 - "GET /aab9 HTTP/1.1" 404 Not Found
-exe.sh: line 6: 125039 Killed                  python3 -m app.main
+Positive prompt: Dumpling (mandu) specialty restaurant interior, inviting and appetizing food photography: close-up and tabletop composition of steamed and pan-fried mandu in bamboo steamers and on plates, glistening sauces and oils, steam rising, fresh garnishes (scallions, sesame), dipping bowls, warm soft ambient lighting, cozy wooden tables and Korean eatery signage, natural warm color palette, high detail, ultra-realistic, photorealistic, sharp focus on food, shallow depth of field, lifelike textures, appetizing presentation
+Negative prompt: No hands overlapping or covering the dumplings; no abnormal fingers (no 6-finger or 4-finger hands); no mutated or extra limbs; no malformed anatomy; no blurred or out-of-focus food; no low-resolution, JPEG artifacts, noise; no watermarks, signatures, logos, or visible text; avoid oversaturation, extreme overexposure, unnatural colors, or other quality degradations
+INFO:     172.18.0.1:50186 - "GET /addhelper/model/generate?prompt=%EB%A7%8C%EB%91%90+%EC%9A%94%EB%A6%AC+%EC%A0%84%EB%AC%B8%EC%A0%90+%EA%B0%80%EA%B2%8C+%EC%9D%B4%EB%AF%B8%EC%A7%80%EB%A5%BC+%EB%A7%8C%EB%93%A4%EC%96%B4+%EC%A3%BC%EC%84%B8%EC%9A%94.&positive_prompt=%EC%8B%9D%EC%9A%95%EC%9D%B4+%EB%8F%8B%EA%B2%8C+%ED%95%B4%EC%A3%BC%EC%84%B8%EC%9A%94&negative_prompt=%EC%82%AC%EB%9E%8C%EC%9D%98+%EC%86%90%EA%B3%BC+%EB%A7%8C%EB%91%90%EA%B0%80+%EA%B2%B9%EC%B3%90%EC%A7%84%EB%8B%A4%EB%93%A0%EC%A7%80%2C+%EC%86%90%EA%B0%80%EB%9D%BD%EC%9D%B4+6%EA%B0%9C%EC%9D%B4%EA%B1%B0%EB%82%98+4%EA%B0%9C%EB%93%B1+%EB%B9%84%EC%A0%95%EC%83%81%EC%A0%81%EC%9D%B8+%EA%B2%83%EC%9D%B4+%EB%90%98%EB%A9%B4+%EC%95%88%EB%90%A9%EB%8B%88%EB%8B%A4. HTTP/1.1" 200 OK
+INFO:     172.18.0.1:42634 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:58488 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:40806 - "GET /geoserver/web/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:36556 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:55496 - "GET /?XDEBUG_SESSION_START=phpstorm HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59332 - "GET /Dr0v HTTP/1.1" 404 Not Found
+INFO:     45.79.8.221:49113 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:49160 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:54444 - "POST /_next HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:41976 - "POST /api HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:49582 - "POST /_next/server HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:43578 - "POST /app HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51340 - "POST /api/route HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51368 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:32910 - "GET /owa/auth/x.js HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:57192 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52218 - "OPTIONS / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:45598 - "GET /actuator/gateway/routes HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:32794 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
