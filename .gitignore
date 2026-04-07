@@ -1,7 +1,32 @@
-*.py[cod]
-.web
-assets/external/
-*.db
-__pycache__/
-.states
-.security/
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Build artifacts
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Editor/System files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Custom Ignore: 가이드 및 임시 문서 제외
+Guide/
+temp/
+
+# Only allow Page and docs (if exists)
+!Page/
+!docs/
