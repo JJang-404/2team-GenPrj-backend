@@ -44,15 +44,15 @@ async def upload_image(
 ):
 	db = SQLiteDB()
 	if not db.GetUserById(user_id):
-		return JSONResponse(status_code=404, content=error_response("존재하지 않는 사용자입니다."))
+		return JSONResponse(content=error_response("존재하지 않는 사용자입니다."))
 
 	file_ext = _normalize_ext(image)
 	if not file_ext:
-		return JSONResponse(status_code=400, content=error_response("png 또는 jpg 파일만 업로드할 수 있습니다."))
+		return JSONResponse(content=error_response("png 또는 jpg 파일만 업로드할 수 있습니다."))
 
 	file_bytes = await image.read()
 	if not file_bytes:
-		return JSONResponse(status_code=400, content=error_response("빈 파일은 업로드할 수 없습니다."))
+		return JSONResponse(content=error_response("빈 파일은 업로드할 수 없습니다."))
 
 	month_folder = datetime.now().strftime("%Y%m")
 	target_dir = Path(defines.IMAGES_DIR) / month_folder
@@ -102,7 +102,6 @@ async def upload_image(
 def list_images(req: ImageListRequest):
 	if req.user_id is None and not (req.file_name or "").strip() and not (req.file_desc or "").strip():
 		return JSONResponse(
-			status_code=400,
 			content=error_response("user_id, file_name, file_desc 중 하나 이상은 필요합니다."),
 		)
 
@@ -121,7 +120,7 @@ def get_image_info_by_id(req: ImageInfoRequest):
 	db = SQLiteDB()
 	image_row = db.GetUserImageById(req.image_id)
 	if not image_row:
-		return JSONResponse(status_code=404, content=error_response("이미지 정보가 없습니다."))
+		return JSONResponse(content=error_response("이미지 정보가 없습니다."))
 	return ok_response({"data": "이미지 조회 성공", "datalist": [image_row]})
 
 
@@ -130,11 +129,11 @@ def download_image_by_id(req: ImageInfoRequest):
 	db = SQLiteDB()
 	image_row = db.GetUserImageById(req.image_id)
 	if not image_row:
-		return JSONResponse(status_code=404, content=error_response("이미지 정보가 없습니다."))
+		return JSONResponse(content=error_response("이미지 정보가 없습니다."))
 
 	absolute_path = Path(defines.DATA_DIR) / image_row["stored_path"]
 	if not absolute_path.exists():
-		return JSONResponse(status_code=404, content=error_response("이미지 파일이 존재하지 않습니다."))
+		return JSONResponse(content=error_response("이미지 파일이 존재하지 않습니다."))
 
 	return FileResponse(
 		path=str(absolute_path),

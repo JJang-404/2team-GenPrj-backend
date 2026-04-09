@@ -50,6 +50,17 @@ export const API_BASE_URL = 'https://gen-proj.duckdns.org';
 }
 ```
 
+논리 오류인 경우에도 JSON으로 응답하며, HTTP 상태코드가 아니라 아래 바디 값으로 판단합니다.
+
+```json
+{
+	"statusCode": 100,
+	"statusMsg": "오류 원인",
+	"datalist": [],
+	"data": null
+}
+```
+
 ### 이미지 응답 형식
 
 generate와 changeimage는 성공 시 아래처럼 이미지 바이너리를 반환합니다.

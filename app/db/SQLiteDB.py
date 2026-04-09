@@ -14,7 +14,9 @@ class SQLiteDB:
 
 	# SQLite 연결 객체 생성
 	def _connect(self) -> sqlite3.Connection:
-		return sqlite3.connect(self.db_path)
+		conn = sqlite3.connect(self.db_path)
+		conn.execute("PRAGMA foreign_keys = ON")
+		return conn
 
 	# SELECT 쿼리 실행 후 결과를 딕셔너리 리스트로 반환
 	def SelectSQL(self, sql: str, params: Any = None) -> list[dict[str, Any]]:
@@ -204,3 +206,116 @@ class SQLiteDB:
 
 		base_sql += " ORDER BY image_id DESC"
 		return self.SelectSQL(base_sql, tuple(params))
+
+	# 디자인 프로필 저장 테이블 생성 보장
+	def EnsureDesignProfileTable(self) -> None:
+		create_table_sql = (
+			"CREATE TABLE IF NOT EXISTS design_profile_tbl ("
+			"profile_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+			"user_id TEXT NOT NULL, "
+			"profile_json TEXT NOT NULL, "
+			"ai_image_id INTEGER NULL, "
+			"created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')), "
+			"CONSTRAINT valid_json CHECK (json_valid(profile_json)), "
+			"FOREIGN KEY (user_id) REFERENCES users_tbl(user_id), "
+			"FOREIGN KEY (ai_image_id) REFERENCES user_images_tbl(image_id)"
+			")"
+		)
+		create_index_sql = (
+			"CREATE INDEX IF NOT EXISTS idx_design_profile_tbl_user_id "
+			"ON design_profile_tbl(user_id)"
+		)
+
+		with self._connect() as conn:
+			cur = conn.cursor()
+			cur.execute(create_table_sql)
+			table_info = cur.execute("PRAGMA table_info(design_profile_tbl)").fetchall()
+			column_names = {str(row[1]) for row in table_info}
+			if "ai_image_id" not in column_names:
+				cur.execute("ALTER TABLE design_profile_tbl ADD COLUMN ai_image_id INTEGER")
+			cur.execute(create_index_sql)
+			conn.commit()
+
+	# 디자인 프로필 JSON 저장
+	def InsertDesignProfile(self, user_id: str, profile_json: str, ai_image_id: int | None = None) -> tuple[int, str]:
+		self.EnsureDesignProfileTable()
+		if not user_id.strip():
+			return (0, "user_id가 비어 있습니다.")
+		if not self.GetUserById(user_id):
+			return (0, "존재하지 않는 사용자입니다.")
+		if ai_image_id is not None:
+			image_row = self.GetUserImageById(ai_image_id)
+			if image_row is None:
+				return (0, "존재하지 않는 ai_image_id 입니다.")
+			if str(image_row.get("user_id", "")) != user_id:
+				return (0, "다른 사용자의 이미지로는 저장할 수 없습니다.")
+
+		sql = "INSERT INTO design_profile_tbl (user_id, profile_json, ai_image_id) VALUES (?, ?, ?)"
+		try:
+			with self._connect() as conn:
+				cur = conn.cursor()
+				cur.execute(sql, (user_id, profile_json, ai_image_id))
+				if cur.rowcount <= 0:
+					conn.rollback()
+					return (0, "INSERT 결과가 없습니다.")
+				conn.commit()
+				last_row_id = cur.lastrowid
+				if last_row_id is None:
+					return (0, "생성된 profile_id를 확인할 수 없습니다.")
+				return (int(last_row_id), "OK")
+		except sqlite3.IntegrityError as ex:
+			return (0, str(ex))
+		except Exception as ex:
+			return (0, str(ex))
+
+	# profile_id 기준 디자인 프로필 저장 (0: INSERT, 0 초과: UPDATE)
+	def SaveDesignProfile(
+		self,
+		profile_id: int,
+		user_id: str,
+		profile_json: str,
+		ai_image_id: int | None = None,
+	) -> tuple[int, str]:
+		self.EnsureDesignProfileTable()
+		if not user_id.strip():
+			return (0, "user_id가 비어 있습니다.")
+		if not self.GetUserById(user_id):
+			return (0, "존재하지 않는 사용자입니다.")
+		if ai_image_id is not None:
+			image_row = self.GetUserImageById(ai_image_id)
+			if image_row is None:
+				return (0, "존재하지 않는 ai_image_id 입니다.")
+			if str(image_row.get("user_id", "")) != user_id:
+				return (0, "다른 사용자의 이미지로는 저장할 수 없습니다.")
+
+		if profile_id <= 0:
+			return self.InsertDesignProfile(user_id=user_id, profile_json=profile_json, ai_image_id=ai_image_id)
+
+		find_sql = "SELECT profile_id FROM design_profile_tbl WHERE profile_id = ? AND user_id = ?"
+		rows = self.SelectSQL(find_sql, (profile_id, user_id))
+		if not rows:
+			return (0, "수정할 디자인 프로필이 없습니다.")
+
+		update_sql = "UPDATE design_profile_tbl SET profile_json = ?, ai_image_id = ? WHERE profile_id = ? AND user_id = ?"
+		try:
+			with self._connect() as conn:
+				cur = conn.cursor()
+				cur.execute(update_sql, (profile_json, ai_image_id, profile_id, user_id))
+				if cur.rowcount <= 0:
+					conn.rollback()
+					return (0, "UPDATE 결과가 없습니다.")
+				conn.commit()
+				return (profile_id, "OK")
+		except sqlite3.IntegrityError as ex:
+			return (0, str(ex))
+		except Exception as ex:
+			return (0, str(ex))
+
+	# user_id 기준 디자인 프로필 목록 조회
+	def GetDesignProfilesByUserId(self, user_id: str) -> list[dict[str, Any]]:
+		self.EnsureDesignProfileTable()
+		sql = (
+			"SELECT profile_id, user_id, profile_json, ai_image_id, created_at "
+			"FROM design_profile_tbl WHERE user_id = ? ORDER BY profile_id"
+		)
+		return self.SelectSQL(sql, (user_id,))

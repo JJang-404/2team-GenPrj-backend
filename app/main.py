@@ -7,6 +7,8 @@ from app.common.defines import SERVER_PORT
 
 from app.restapi.modelApi import  router as adhelper_router
 from app.restapi.adverApi import router as adver_router
+from app.restapi.designApi import router as design_router
+from app.restapi.SQLiteApi import router as sqlite_router
 from app.restapi.imageApi import router as image_router
 from app.restapi.userApi import router as user_router
 
@@ -23,6 +25,8 @@ app.add_middleware(
 )
 app.include_router(adhelper_router)
 app.include_router(adver_router)
+app.include_router(design_router)
+app.include_router(sqlite_router)
 app.include_router(image_router)
 app.include_router(user_router)
 

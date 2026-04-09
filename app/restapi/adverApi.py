@@ -34,7 +34,6 @@ def generate_ad_copy(req: AdCopyRequest):
 		)
 	except Exception as ex:
 		return JSONResponse(
-			status_code=500,
 			content=error_response(str(ex)),
 		)
 	

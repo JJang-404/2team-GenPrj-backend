@@ -29,7 +29,6 @@ def signup(req: UserSignupRequest):
 	db = SQLiteDB()
 	if db.GetUserByLoginId(req.user_id):
 		return JSONResponse(
-			status_code=400,
 			content=error_response("이미 존재하는 로그인 아이디입니다."),
 		)
 
@@ -37,7 +36,6 @@ def signup(req: UserSignupRequest):
 		new_user_no = db.InsertUser(req.user_id, req.user_name, _hash_password(req.user_passwd))
 	except sqlite3.IntegrityError:
 		return JSONResponse(
-			status_code=400,
 			content=error_response("이미 존재하는 로그인 아이디입니다."),
 		)
 
@@ -61,7 +59,6 @@ def login(req: UserLoginRequest):
 	user = db.VerifyUser(req.user_id, _hash_password(req.user_passwd))
 	if not user:
 		return JSONResponse(
-			status_code=401,
 			content=error_response("아이디 또는 비밀번호가 올바르지 않습니다."),
 		)
 

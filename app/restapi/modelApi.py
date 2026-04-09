@@ -91,13 +91,13 @@ def generate_image(
             out_map.update(get_error_response("Upstream did not return image data."))
             out_map["upstream_content_type"] = content_type
             out_map["upstream_body_preview"] = body[:300].decode("utf-8", errors="ignore")
-            return JSONResponse(status_code=502, content=out_map)
+            return JSONResponse(content=out_map)
 
         return Response(content=body, media_type=content_type)
     except Exception as ex:
         out_map: dict[str, Any] = {}
         out_map.update(get_error_response(str(ex)))
-        return JSONResponse(status_code=500, content=out_map)
+        return JSONResponse(content=out_map)
 
 
 # backend.ini의 [engine] engine_url(기본값: https://nabidream.duckdns.org/model/) 업스트림의 /changeimage 호출하여 이미지를 반환합니다
@@ -105,14 +105,12 @@ def generate_image(
 async def changeimage(req: ChangeImageRequest) -> Response:
     if req.strength < 0.0 or req.strength > 1.0:
         return JSONResponse(
-            status_code=400,
             content=get_error_response("strength는 0.0~1.0 범위여야 합니다."),
         )
 
     raw_base64 = (req.image_base64 or "").strip()
     if not raw_base64:
         return JSONResponse(
-            status_code=400,
             content=get_error_response("image_base64는 필수입니다."),
         )
 
@@ -124,7 +122,6 @@ async def changeimage(req: ChangeImageRequest) -> Response:
         base64.b64decode(raw_base64, validate=True)
     except Exception:
         return JSONResponse(
-            status_code=400,
             content=get_error_response("유효한 base64 이미지가 아닙니다."),
         )
 
@@ -158,10 +155,10 @@ async def changeimage(req: ChangeImageRequest) -> Response:
             out_map.update(get_error_response("Upstream did not return image data."))
             out_map["upstream_content_type"] = content_type
             out_map["upstream_body_preview"] = body[:300].decode("utf-8", errors="ignore")
-            return JSONResponse(status_code=502, content=out_map)
+            return JSONResponse(content=out_map)
 
         return Response(content=body, media_type=content_type)
     except Exception as ex:
-        return JSONResponse(status_code=500, content=get_error_response(str(ex)))
+        return JSONResponse(content=get_error_response(str(ex)))
 
 
