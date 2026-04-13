@@ -37,6 +37,16 @@ class OpenAiJob:
 			"Translate the given Korean or mixed-language image prompt into concise English. "
 			"Return only the English prompt text without explanations."
 		)
+		self._bg_prompt_msg = (
+			"You prepare Stable Diffusion 3.5 prompts for generating background-only scenes. "
+			"Return strict JSON only with keys positive_prompt and negative_prompt. "
+			"Use the image caption and user instructions to keep only environment, lighting, color palette, weather, camera mood, and composition clues. "
+			"Do not include foreground subjects or named objects from the source image. "
+			"Positive prompt must clearly request an empty background scene without main subject. "
+			"Negative prompt must strongly exclude people, animals, vehicles, products, logos, text, watermark, and foreground objects. "
+			"Translate Korean or mixed-language inputs into concise natural English. "
+			"Do not include markdown or explanations."
+		)
 		self._default_negative_prompt = (
 			"low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, "
 			"cropped, watermark, text, logo, duplicate, oversaturated"
@@ -230,3 +240,62 @@ class OpenAiJob:
 			if normalized_target:
 				fallback_variants.append(f"{normalized_target}을 위한 {normalized_text}")
 			return AdCopyBundle(main_copy=fallback_variants[0], variants=fallback_variants[:variant_count])
+
+	def build_background_prompt_bundle(
+		self,
+		caption_text: str,
+		user_prompt: str | None = None,
+		positive_prompt: str | None = None,
+		negative_prompt: str | None = None,
+	) -> PromptBundle:
+		normalized_caption = (caption_text or "").strip()
+		normalized_user_prompt = (user_prompt or "").strip()
+		normalized_positive = (positive_prompt or "").strip()
+		normalized_negative = (negative_prompt or "").strip()
+
+		request_payload = {
+			"caption_text": normalized_caption,
+			"user_prompt": normalized_user_prompt,
+			"positive_prompt": normalized_positive,
+			"negative_prompt": normalized_negative,
+		}
+
+		fallback_positive_parts = [
+			"empty environment background scene",
+			"cinematic atmosphere",
+			"no foreground subject",
+			"no people, no animals, no products",
+		]
+		if normalized_user_prompt:
+			fallback_positive_parts.insert(1, self.change_kor_to_eng(normalized_user_prompt))
+		fallback_positive = ", ".join(part for part in fallback_positive_parts if part)
+		fallback_negative = (
+			normalized_negative
+			or "person, people, human, face, body, animal, pet, car, vehicle, product, object, logo, text, watermark, foreground subject"
+		)
+
+		try:
+			messages = [
+				SystemMessage(content=self._bg_prompt_msg),
+				HumanMessage(content=json.dumps(request_payload, ensure_ascii=False)),
+			]
+			result = self._llm.invoke(messages)
+			bundle = self._parse_prompt_bundle(self._message_content_to_text(result.content))
+			generated_positive = (bundle.positive_prompt or "").strip()
+			if "no foreground subject" not in generated_positive.lower():
+				generated_positive = f"{generated_positive}, no foreground subject" if generated_positive else fallback_positive
+
+			generated_negative = (bundle.negative_prompt or "").strip() or fallback_negative
+			if "person" not in generated_negative.lower():
+				generated_negative = f"{generated_negative}, person, people, human"
+
+			return PromptBundle(
+				positive_prompt=generated_positive or fallback_positive,
+				negative_prompt=generated_negative,
+			)
+		except Exception as ex:
+			print(f"[build_background_prompt_bundle Error] {type(ex).__name__}: {ex}")
+			return PromptBundle(
+				positive_prompt=fallback_positive,
+				negative_prompt=fallback_negative,
+			)

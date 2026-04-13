@@ -4,6 +4,7 @@ import json
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse, Response
 from typing import Any
+from pydantic import BaseModel, Field
 import configparser
 import os
 from urllib.request import Request, urlopen
@@ -47,6 +48,45 @@ def _build_prompt_bundle(
     print(f"Positive prompt: {prompt_bundle.positive_prompt}")
     print(f"Negative prompt: {prompt_bundle.negative_prompt}")
     return prompt_bundle
+
+
+def _extract_text_from_image_base64(raw_base64: str, task_prompt: str) -> str:
+    engine_url = _get_engine_base_url()
+    image2text_url = f"{engine_url}/image2text"
+    payload = {
+        "image_base64": raw_base64,
+        "task_prompt": task_prompt,
+    }
+    request = Request(
+        image2text_url,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    with urlopen(request, timeout=180) as upstream_response:
+        body = upstream_response.read()
+
+    try:
+        decoded = json.loads(body.decode("utf-8", errors="ignore"))
+    except Exception as ex:
+        raise RuntimeError("image2text 응답을 JSON으로 해석할 수 없습니다.") from ex
+
+    text = ""
+    if isinstance(decoded, dict):
+        text = str(decoded.get("text") or decoded.get("caption") or decoded.get("data") or "").strip()
+
+    if not text:
+        raise RuntimeError("image2text 응답에 텍스트가 없습니다.")
+    return text
+
+
+class MakeBgImageRequest(BaseModel):
+    prompt: str = Field(..., min_length=1, description="배경 생성 스타일/분위기 지시 프롬프트")
+    image_base64: str = Field(..., min_length=1, description="Base64 encoded image bytes")
+    task_prompt: str = Field(default="<DETAILED_CAPTION>", description="업스트림 image2text task prompt")
+    positive_prompt: str | None = Field(default=None, description="추가 positive prompt")
+    negative_prompt: str | None = Field(default=None, description="추가 negative prompt")
 
 
 # 필요에 따라 추가 엔드포인트 구현 가능
@@ -147,6 +187,64 @@ async def changeimage(req: ChangeImageRequest) -> Response:
         )
 
         with urlopen(request, timeout=180) as upstream_response:
+            body = upstream_response.read()
+            content_type = upstream_response.headers.get_content_type()
+
+        if not content_type.startswith("image/"):
+            out_map: dict[str, Any] = {}
+            out_map.update(get_error_response("Upstream did not return image data."))
+            out_map["upstream_content_type"] = content_type
+            out_map["upstream_body_preview"] = body[:300].decode("utf-8", errors="ignore")
+            return JSONResponse(content=out_map)
+
+        return Response(content=body, media_type=content_type)
+    except Exception as ex:
+        return JSONResponse(content=get_error_response(str(ex)))
+
+
+@router.post("/makebgimage")
+async def makebgimage(req: MakeBgImageRequest) -> Response:
+    raw_base64 = (req.image_base64 or "").strip()
+    if not raw_base64:
+        return JSONResponse(content=get_error_response("image_base64는 필수입니다."))
+
+    if "," in raw_base64:
+        raw_base64 = raw_base64.split(",", 1)[1]
+
+    try:
+        # 입력 이미지가 유효한 base64인지 먼저 확인합니다.
+        base64.b64decode(raw_base64, validate=True)
+    except Exception:
+        return JSONResponse(content=get_error_response("유효한 base64 이미지가 아닙니다."))
+
+    try:
+        caption_text = _extract_text_from_image_base64(
+            raw_base64=raw_base64,
+            task_prompt=(req.task_prompt or "<DETAILED_CAPTION>").strip() or "<DETAILED_CAPTION>",
+        )
+
+        translator = OpenAiJob()
+        prompt_bundle = translator.build_background_prompt_bundle(
+            caption_text=caption_text,
+            user_prompt=req.prompt,
+            positive_prompt=req.positive_prompt,
+            negative_prompt=req.negative_prompt,
+        )
+
+        engine_url = _get_engine_base_url()
+        image_url = f"{engine_url}/generate"
+        payload = {
+            "positive_prompt": prompt_bundle.positive_prompt,
+            "negative_prompt": prompt_bundle.negative_prompt,
+        }
+        request = Request(
+            image_url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+
+        with urlopen(request, timeout=300) as upstream_response:
             body = upstream_response.read()
             content_type = upstream_response.headers.get_content_type()
 

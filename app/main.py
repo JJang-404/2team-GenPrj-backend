@@ -18,7 +18,8 @@ from app.restapi.userApi import router as user_router
 app = FastAPI(title="addhelper Backend")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+ #   allow_origins=["http://localhost:5173"],
+    allow_origins=["*"],  # 모든 도메인 허용
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
