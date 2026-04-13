@@ -1,0 +1,36 @@
+
+
+designApi.py 에서는 아래처럼 호출된 것을 받습니다.기존의 구조와 동일하게 만들어 주세요.
+
+class DesignApi extends BaseApi {
+  async saveDesignProfile(payload) {
+    alert('디자인 메타 저장 API 호출\n\n' + JSON.stringify(payload, null, 2));
+
+    return this.post('/design/saveprofile', payload, '디자인 메타 저장에 실패했습니다.');
+  }
+}
+
+
+
+save_design_profile 함수에서 저장할 테이블을 만들어 주세요.
+테이블 이름은 design_profile_tbl로 해주시고,
+컬럼은 profile_id(key) user_id, profile_jason 형태로 만들어 주면 될것 같습니다.
+참고로  CONSTRAINT valid_json CHECK (json_valid(profile_jason)) 이것을 쓰는게 더 좋으면 그렇게 하면 될것 같습니다.
+user_id는 json에 같이 들어 있습니다. 
+
+
+save_design_profile 함수에서 
+프론트엔드에서 
+프로파일 저장시 payload에 이 profile_id도 넘어 옵니다.
+새 디자인의 경우에는 profile_id를 0으로 하고,
+아닌 경우에는 값을 주어서 저장시에 
+서버에서 0이면 insert, 0보다 크면 update를 할수 있도록 해야 합니다.
+
+design_profile_tbl
+profile_id 당  AI 이미지가 생성될수 있습니다.
+그러므로 design_profile_tbl 에
+user_images_tbl 의 image_id 를 
+저장하는   ai_image_id  를 만들어 주세요,
+이값은 ai이미지가 없을수도 있으므로
+null 값도 허용 해야 합니다.
+

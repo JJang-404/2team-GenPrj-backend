@@ -1,0 +1,33 @@
+가장 먼저 uv가 설치되어 있지 않다면 설치해 주세요:
+
+pip install uv
+
+그 후, 프로젝트 폴더(예: Backend_final)로 이동하여 다음 명령어들을 실행합니다:
+
+  1. 가상환경 생성 및 활성화 (권장)
+uv venv
+.venv\Scripts\activate
+
+  2. requirements.txt 파일의 패키지 설치
+uv pip install -r requirements.txt
+
+  참고: uv의 주요 명령어
+   * 패키지 동기화 (설치된 것 외 삭제 및 신규 설치): uv pip sync requirements.txt
+   * 개별 패키지 설치: uv pip install 패키지명
+   * 설치 속도: uv는 기존 pip보다 수십 배 빠르므로 대용량 라이브러리(PyTorch 등) 설치 시 매우 유리합니다.
+
+
+  3. uvicorn 명령어로 직접 실행 (가장 일반적)
+  터미널(또는 CMD)에서 프로젝트 루트 디렉토리(D:\01.project\Backend_server\Backend1) 위치에서 아래 명령어를 입력하세요.
+
+  uvicorn app.main:app --reload
+   * app.main: app 폴더 안의 main.py 파일을 의미합니다.
+   * :app: main.py 내부에 정의된 FastAPI 인스턴스 변수 이름이 app인 경우입니다.
+   * --reload: 코드가 변경될 때마다 서버를 자동으로 재시작합니다 (개발용).
+
+
+---
+
+
+
+
