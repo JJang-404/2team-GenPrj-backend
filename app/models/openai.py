@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import importlib
+import os
 from pathlib import Path
 from typing import Any
 
@@ -30,47 +32,143 @@ class AdCopyBundle(BaseModel):
 
 class OpenAiJob:
 	def __init__(self, model: str = "gpt-5-mini") -> None:
-		self._api_key = self._read_open_api_key()
+		env_map = self._read_env_map()
+		self._api_key = self._read_open_api_key(env_map)
 		self._base_prompt_msg = defines.BASE_PROMPT_MSG
 		self._ad_copy_prompt_msg = defines.AD_COPY_PROMPT_MSG
+		self._model = model
+		
 		self._translate_prompt_msg = (
-			"Translate the given Korean or mixed-language image prompt into concise English. "
-			"Return only the English prompt text without explanations."
+			"Translate the given Korean or mixed-language image prompt into optimized English for Stable Diffusion 3.5. "
+
+			"IMPORTANT RULES:\n"
+			"1. Put the MOST IMPORTANT visual elements FIRST (subject, style, composition).\n"
+			"2. Keep the first 60~70 tokens highly information-dense.\n"
+			"3. Less important details (lighting nuances, minor descriptors) MUST go at the end.\n"
+			"4. Keep the total prompt concise (prefer under 100 tokens).\n"
+			"5. Use comma-separated keyword style, NOT long sentences.\n"
+			"6. Prioritize in this order:\n"
+			"   subject > style > composition > lighting > color > details\n"
+			
+			"Return only the final prompt."
 		)
+
 		self._bg_prompt_msg = (
-			"You prepare Stable Diffusion 3.5 prompts for generating background-only scenes. "
-			"Return strict JSON only with keys positive_prompt and negative_prompt. "
-			"Use the image caption and user instructions to keep only environment, lighting, color palette, weather, camera mood, and composition clues. "
-			"Do not include foreground subjects or named objects from the source image. "
-			"Positive prompt must clearly request an empty background scene without main subject. "
-			"Negative prompt must strongly exclude people, animals, vehicles, products, logos, text, watermark, and foreground objects. "
-			"Translate Korean or mixed-language inputs into concise natural English. "
-			"Do not include markdown or explanations."
+			"You prepare Stable Diffusion 3.5 prompts for background-only scenes.\n"
+			
+			"STRICT RULES:\n"
+			"1. The first 60 tokens MUST define the environment and composition clearly.\n"
+			"2. Start with scene type, environment, and camera composition.\n"
+			"3. Ensure the scene is explicitly empty (no subject).\n"
+			"4. Less important atmosphere details go at the end.\n"
+			
+			"FORMAT RULES:\n"
+			"- Use comma-separated keywords\n"
+			"- No long sentences\n"
+			
+			"Return strict JSON only with keys positive_prompt and negative_prompt."
 		)
+		
 		self._default_negative_prompt = (
 			"low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, "
 			"cropped, watermark, text, logo, duplicate, oversaturated"
 		)
+		self._langfuse_client = self._build_langfuse_client(env_map)
+		self._langfuse_handler = self._build_langfuse_handler(env_map)
 		self._llm = ChatOpenAI(model=model, temperature=0, api_key=SecretStr(self._api_key))
 
-	def _read_open_api_key(self) -> str:
+	def _read_env_map(self) -> dict[str, str]:
 		env_path = Path(__file__).resolve().parents[2] / ".security" / ".env"
 		if not env_path.exists():
 			raise RuntimeError(f"Environment file not found: {env_path}")
 
+		env_map: dict[str, str] = {}
 		for line in env_path.read_text(encoding="utf-8").splitlines():
 			raw = line.strip()
 			if not raw or raw.startswith("#") or "=" not in raw:
 				continue
 
 			key, value = raw.split("=", 1)
-			if key.strip() == "OPEN_API_KEY":
-				token = value.strip().strip('"').strip("'")
-				if token:
-					return token
-				break
+			env_map[key.strip()] = value.strip().strip('"').strip("'")
+
+		return env_map
+
+	def _read_open_api_key(self, env_map: dict[str, str]) -> str:
+		token = (env_map.get("OPEN_API_KEY") or "").strip()
+		if token:
+			return token
 
 		raise RuntimeError("OPEN_API_KEY is missing in .security/.env")
+
+	def _build_langfuse_handler(self, env_map: dict[str, str]) -> Any | None:
+		callback_handler_cls = None
+		try:
+			langfuse_langchain = importlib.import_module("langfuse.langchain")
+			callback_handler_cls = getattr(langfuse_langchain, "CallbackHandler", None)
+		except Exception:
+			try:
+				langfuse_callback = importlib.import_module("langfuse.callback")
+				callback_handler_cls = getattr(langfuse_callback, "CallbackHandler", None)
+			except Exception:
+				callback_handler_cls = None
+
+		if callback_handler_cls is None:
+			print("[Langfuse] langfuse 패키지가 없어 trace를 비활성화합니다.")
+			return None
+
+		public_key = (env_map.get("LANGFUSE_PUBLIC_KEY") or "").strip()
+		secret_key = (env_map.get("LANGFUSE_SECRET_KEY") or "").strip()
+		base_url = (env_map.get("LANGFUSE_BASE_URL") or "").strip()
+		if not (public_key and secret_key and base_url):
+			return None
+
+		# Langfuse 4.x LangChain CallbackHandler는 secret_key/host를 생성자 인자로 받지 않아
+		# 환경변수 기반 설정으로 주입합니다.
+		os.environ["LANGFUSE_SECRET_KEY"] = secret_key
+		os.environ["LANGFUSE_HOST"] = base_url
+
+		try:
+			return callback_handler_cls(
+				public_key=public_key,
+			)
+		except Exception as ex:
+			print(f"[Langfuse] 초기화 실패: {type(ex).__name__}: {ex}")
+			return None
+
+	def _build_langfuse_client(self, env_map: dict[str, str]) -> Any | None:
+		public_key = (env_map.get("LANGFUSE_PUBLIC_KEY") or "").strip()
+		secret_key = (env_map.get("LANGFUSE_SECRET_KEY") or "").strip()
+		base_url = (env_map.get("LANGFUSE_BASE_URL") or "").strip()
+		if not (public_key and secret_key and base_url):
+			return None
+
+		try:
+			langfuse_mod = importlib.import_module("langfuse")
+			langfuse_cls = getattr(langfuse_mod, "Langfuse", None)
+			if langfuse_cls is None:
+				return None
+
+			return langfuse_cls(
+				public_key=public_key,
+				secret_key=secret_key,
+				host=base_url,
+			)
+		except Exception as ex:
+			print(f"[Langfuse] client 초기화 실패: {type(ex).__name__}: {ex}")
+			return None
+
+	def _invoke_llm(self, messages: list[SystemMessage | HumanMessage], trace_name: str):
+		if self._langfuse_handler is None:
+			return self._llm.invoke(messages)
+
+		return self._llm.invoke(
+			messages,
+			config={
+				"callbacks": [self._langfuse_handler],
+				"run_name": trace_name,
+				"metadata": {"model": self._model},
+			},
+		)
 
 	def _contains_korean(self, text: str) -> bool:
 		return any("가" <= char <= "힣" for char in text)
@@ -136,7 +234,7 @@ class OpenAiJob:
 				SystemMessage(content=self._translate_prompt_msg),
 				HumanMessage(content=kor_str),
 			]
-			result = self._llm.invoke(messages)
+			result = self._invoke_llm(messages, trace_name="change_kor_to_eng")
 			content = self._message_content_to_text(result.content)
 			return content or kor_str
 		except Exception as ex:
@@ -183,7 +281,7 @@ class OpenAiJob:
 				SystemMessage(content=self._base_prompt_msg),
 				HumanMessage(content=json.dumps(request_payload, ensure_ascii=False)),
 			]
-			result = self._llm.invoke(messages)
+			result = self._invoke_llm(messages, trace_name="build_prompt_bundle")
 			bundle = self._parse_prompt_bundle(self._message_content_to_text(result.content))
 			return PromptBundle(
 				positive_prompt=bundle.positive_prompt or normalized_positive or self.change_kor_to_eng(normalized_prompt),
@@ -225,7 +323,7 @@ class OpenAiJob:
 				SystemMessage(content=self._ad_copy_prompt_msg),
 				HumanMessage(content=json.dumps(request_payload, ensure_ascii=False)),
 			]
-			result = self._llm.invoke(messages)
+			result = self._invoke_llm(messages, trace_name="build_ad_copy")
 			bundle = self._parse_ad_copy_bundle(self._message_content_to_text(result.content))
 			variants = bundle.variants[:variant_count]
 			main_copy = bundle.main_copy or (variants[0] if variants else normalized_text)
@@ -279,7 +377,7 @@ class OpenAiJob:
 				SystemMessage(content=self._bg_prompt_msg),
 				HumanMessage(content=json.dumps(request_payload, ensure_ascii=False)),
 			]
-			result = self._llm.invoke(messages)
+			result = self._invoke_llm(messages, trace_name="build_background_prompt_bundle")
 			bundle = self._parse_prompt_bundle(self._message_content_to_text(result.content))
 			generated_positive = (bundle.positive_prompt or "").strip()
 			if "no foreground subject" not in generated_positive.lower():
