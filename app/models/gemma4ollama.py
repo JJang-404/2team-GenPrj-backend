@@ -200,7 +200,9 @@ class Gemma4OllamaService:
         bundle = self._parse_prompt_bundle(response_text)
         if not bundle.positive_prompt:
             raise RuntimeError("Ollama 응답에 positive_prompt가 없습니다.")
-        bundle = self._normalize_background_prompt_bundle(bundle)
+        bundle = self._normalize_background_prompt_bundle(
+            bundle,
+        )
         print(
             "[Gemma4OllamaService] prompt bundle created "
             f"positive_len={len(bundle.positive_prompt)}, negative_len={len(bundle.negative_prompt)}"
