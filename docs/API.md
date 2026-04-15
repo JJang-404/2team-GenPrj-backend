@@ -9,7 +9,7 @@
 
 권장 사항은 아래와 같습니다.
 
-1. `generate_sync`, `changeimage_sync`, `makebgimage_sync`, `makebgimageollama_sync`는 테스트 또는 짧은 작업에만 사용합니다.
+1. `generate_sync`, `changeimage_sync`, `makebgimage_sync`, `makebgimageollama_sync`, `generatecomfyui_sync`, `changeimagecomfyui_sync`, `makebgimagecomfyui_sync`는 테스트 또는 짧은 작업에만 사용합니다.
 2. 실제 서비스 화면에서는 `.../jobs` 비동기 API 사용을 권장합니다.
 3. 긴 작업을 동기 API로 호출하면 프론트보다 앞단의 서버나 게이트웨이에서 504가 발생할 수 있습니다.
 
@@ -42,6 +42,10 @@ GET  /addhelper/model/generate_sync
 POST /addhelper/model/changeimage_sync
 POST /addhelper/model/makebgimage_sync
 POST /addhelper/model/makebgimageollama_sync
+
+GET  /addhelper/model/generatecomfyui_sync
+POST /addhelper/model/changeimagecomfyui_sync
+POST /addhelper/model/makebgimagecomfyui_sync
 ```
 
 ### 2-3. 비동기 API
@@ -62,6 +66,18 @@ GET  /addhelper/model/makebgimage/jobs/{job_id}/result
 POST /addhelper/model/makebgimageollama/jobs
 GET  /addhelper/model/makebgimageollama/jobs/{job_id}
 GET  /addhelper/model/makebgimageollama/jobs/{job_id}/result
+
+POST /addhelper/model/generatecomfyui/jobs
+GET  /addhelper/model/generatecomfyui/jobs/{job_id}
+GET  /addhelper/model/generatecomfyui/jobs/{job_id}/result
+
+POST /addhelper/model/changeimagecomfyui/jobs
+GET  /addhelper/model/changeimagecomfyui/jobs/{job_id}
+GET  /addhelper/model/changeimagecomfyui/jobs/{job_id}/result
+
+POST /addhelper/model/makebgimagecomfyui/jobs
+GET  /addhelper/model/makebgimagecomfyui/jobs/{job_id}
+GET  /addhelper/model/makebgimagecomfyui/jobs/{job_id}/result
 ```
 
 ## 3. 요청 규칙
@@ -75,8 +91,14 @@ GET  /addhelper/model/makebgimageollama/jobs/{job_id}/result
 
 이미지 관련 규칙:
 
-1. `changeimage_sync`, `makebgimage_sync`, `makebgimageollama_sync`와 해당 jobs API는 `image_base64`가 필요합니다.
+1. `changeimage_sync`, `makebgimage_sync`, `makebgimageollama_sync`, `changeimagecomfyui_sync`, `makebgimagecomfyui_sync`와 해당 jobs API는 `image_base64`가 필요합니다.
 2. `image_base64`는 `data:image/png;base64,...` 형식과 순수 base64 문자열 둘 다 허용합니다.
+
+ComfyUI 프롬프트 규칙:
+
+1. ComfyUI API는 최종적으로 `positive_prompt`와 `negative_prompt`만 사용합니다.
+2. `prompt`는 선택값이며, 전달하면 백엔드가 OpenAI를 통해 `positive/negative`를 보완합니다.
+3. `prompt`를 비우는 경우 `positive_prompt`는 필수입니다.
 
 ## 4. 응답 규칙
 
@@ -330,6 +352,117 @@ export async function makeBgImageOllamaSync(payload: MakeBgImagePayload) {
 }
 ```
 
+### 5-7. generatecomfyui_sync 호출
+
+```ts
+export async function generateImageComfyUiSync(
+	prompt?: string,
+	positivePrompt?: string,
+	negativePrompt?: string,
+) {
+	const query = new URLSearchParams();
+	if (prompt) {
+		query.set('prompt', prompt);
+	}
+	if (positivePrompt) {
+		query.set('positive_prompt', positivePrompt);
+	}
+	if (negativePrompt) {
+		query.set('negative_prompt', negativePrompt);
+	}
+
+	const response = await fetch(
+		`${API_BASE_URL}/addhelper/model/generatecomfyui_sync?${query.toString()}`,
+	);
+	const contentType = response.headers.get('content-type') || '';
+
+	if (!response.ok) {
+		await parseJsonError(response, `HTTP ${response.status}`);
+	}
+
+	if (contentType.startsWith('image/')) {
+		return await response.blob();
+	}
+
+	await parseJsonError(response, 'ComfyUI 이미지 생성 실패');
+	throw new Error('ComfyUI 이미지 생성 실패');
+}
+```
+
+### 5-8. changeimagecomfyui_sync 호출
+
+```ts
+type ChangeImageComfyUiPayload = {
+	prompt?: string;
+	positive_prompt?: string;
+	negative_prompt?: string;
+	image_base64: string;
+	strength?: number;
+};
+
+export async function changeImageComfyUiSync(payload: ChangeImageComfyUiPayload) {
+	const response = await fetch(`${API_BASE_URL}/addhelper/model/changeimagecomfyui_sync`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			prompt: payload.prompt,
+			positive_prompt: payload.positive_prompt,
+			negative_prompt: payload.negative_prompt,
+			image_base64: payload.image_base64,
+			strength: payload.strength ?? 0.45,
+		}),
+	});
+
+	const contentType = response.headers.get('content-type') || '';
+
+	if (!response.ok) {
+		await parseJsonError(response, `HTTP ${response.status}`);
+	}
+
+	if (contentType.startsWith('image/')) {
+		return await response.blob();
+	}
+
+	await parseJsonError(response, 'ComfyUI 이미지 변환 실패');
+	throw new Error('ComfyUI 이미지 변환 실패');
+}
+```
+
+### 5-9. makebgimagecomfyui_sync 호출
+
+```ts
+export async function makeBgImageComfyUiSync(payload: MakeBgImagePayload) {
+	const response = await fetch(`${API_BASE_URL}/addhelper/model/makebgimagecomfyui_sync`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			prompt: payload.prompt,
+			image_base64: payload.image_base64,
+			task_prompt: payload.task_prompt ?? '<DETAILED_CAPTION>',
+			positive_prompt: payload.positive_prompt,
+			negative_prompt: payload.negative_prompt,
+		}),
+	});
+
+	const contentType = response.headers.get('content-type') || '';
+
+	if (!response.ok) {
+		await parseJsonError(response, `HTTP ${response.status}`);
+	}
+
+	if (contentType.startsWith('image/')) {
+		return await response.blob();
+	}
+
+	await parseJsonError(response, 'ComfyUI 배경 생성 실패');
+	throw new Error('ComfyUI 배경 생성 실패');
+}
+```
+
 ## 6. 비동기 jobs API 호출 예시
 
 비동기 API는 아래 순서로 호출합니다.
@@ -460,6 +593,50 @@ export async function makeBgImageOllamaAsync(payload: MakeBgImagePayload) {
 }
 ```
 
+### 6-6. generatecomfyui jobs 호출
+
+```ts
+export async function generateImageComfyUiAsync(
+	prompt?: string,
+	positive_prompt?: string,
+	negative_prompt?: string,
+) {
+	return await runImageJob('/addhelper/model/generatecomfyui/jobs', {
+		prompt,
+		positive_prompt,
+		negative_prompt,
+	});
+}
+```
+
+### 6-7. changeimagecomfyui jobs 호출
+
+```ts
+export async function changeImageComfyUiAsync(payload: ChangeImageComfyUiPayload) {
+	return await runImageJob('/addhelper/model/changeimagecomfyui/jobs', {
+		prompt: payload.prompt,
+		positive_prompt: payload.positive_prompt,
+		negative_prompt: payload.negative_prompt,
+		image_base64: payload.image_base64,
+		strength: payload.strength ?? 0.45,
+	});
+}
+```
+
+### 6-8. makebgimagecomfyui jobs 호출
+
+```ts
+export async function makeBgImageComfyUiAsync(payload: MakeBgImagePayload) {
+	return await runImageJob('/addhelper/model/makebgimagecomfyui/jobs', {
+		prompt: payload.prompt,
+		image_base64: payload.image_base64,
+		task_prompt: payload.task_prompt ?? '<DETAILED_CAPTION>',
+		positive_prompt: payload.positive_prompt,
+		negative_prompt: payload.negative_prompt,
+	});
+}
+```
+
 ## 7. React에서 파일을 base64로 변환하는 방법
 
 ```ts
@@ -534,6 +711,10 @@ POST /addhelper/model/changeimage_sync
 POST /addhelper/model/makebgimage_sync
 POST /addhelper/model/makebgimageollama_sync
 
+GET  /addhelper/model/generatecomfyui_sync?prompt=선택&positive_prompt=선택&negative_prompt=선택
+POST /addhelper/model/changeimagecomfyui_sync
+POST /addhelper/model/makebgimagecomfyui_sync
+
 POST /addhelper/model/generate/jobs
 GET  /addhelper/model/generate/jobs/{job_id}
 GET  /addhelper/model/generate/jobs/{job_id}/result
@@ -549,13 +730,25 @@ GET  /addhelper/model/makebgimage/jobs/{job_id}/result
 POST /addhelper/model/makebgimageollama/jobs
 GET  /addhelper/model/makebgimageollama/jobs/{job_id}
 GET  /addhelper/model/makebgimageollama/jobs/{job_id}/result
+
+POST /addhelper/model/generatecomfyui/jobs
+GET  /addhelper/model/generatecomfyui/jobs/{job_id}
+GET  /addhelper/model/generatecomfyui/jobs/{job_id}/result
+
+POST /addhelper/model/changeimagecomfyui/jobs
+GET  /addhelper/model/changeimagecomfyui/jobs/{job_id}
+GET  /addhelper/model/changeimagecomfyui/jobs/{job_id}/result
+
+POST /addhelper/model/makebgimagecomfyui/jobs
+GET  /addhelper/model/makebgimagecomfyui/jobs/{job_id}
+GET  /addhelper/model/makebgimagecomfyui/jobs/{job_id}/result
 ```
 
 `changeimage_sync` 요청 바디 예시:
 
 ```json
 {
-	"prompt": "카툰 스타일로 바꿔주세요",
+"prompt": "카툰 스타일로 바꿔주세요",
 	"positive_prompt": "cartoon style, clean outlines",
 	"negative_prompt": "blurry, low quality",
 	"image_base64": "data:image/png;base64,... 또는 순수 base64 문자열",
@@ -563,7 +756,7 @@ GET  /addhelper/model/makebgimageollama/jobs/{job_id}/result
 }
 ```
 
-`makebgimage_sync` 또는 `makebgimageollama_sync` 요청 바디 예시:
+`makebgimage_sync` 또는 `makebgimageollama_sync` 또는 `makebgimagecomfyui_sync` 요청 바디 예시:
 
 ```json
 {

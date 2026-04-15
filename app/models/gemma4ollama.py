@@ -13,18 +13,33 @@ class Gemma4OllamaService:
     _DEFAULT_MODEL_NAME = "gemma4:e4b"
     _DEFAULT_OLLAMA_URL = "http://localhost:11434"
     _DEFAULT_OLLAMA_WAIT_TIME = 600
-
-    _VLM_FUSION_PROMPT = (
-        "You are a VLM Prompt Engineer for SD 3.5.\n"
-        "Step 1: Analyze the input image's layout and color.\n"
-        "Step 2: Extract any visible text from the image and include it in the scene understanding.\n"
-        "Step 3: Combine image analysis with the user's request: {user_input}.\n"
-        "Step 4: Follow these STRICT RULES:\n"
-        "- First 60 tokens: environment + composition + inherited visual traits.\n"
-        "- Subject > Style > Composition > Lighting > Color > Details.\n"
-        "- For background scenes: Ensure 'empty scene, no people' is prioritized.\n"
-        "Return only JSON with 'positive_prompt' and 'negative_prompt'."
-    )
+    _VLM_FUSION_PROMPT = None
+    use_prompt_v1 = True
+    
+    if( use_prompt_v1):
+        _VLM_FUSION_PROMPT = (
+            "You are a VLM Prompt Engineer for SD 3.5.\n"
+            "Step 1: Analyze the input image's layout and color.\n"
+            "Step 2: Extract any visible text from the image and include it in the scene understanding.\n"
+            "Step 3: Combine image analysis with the user's request: {user_input}.\n"
+            "Step 4: Follow these STRICT RULES:\n"
+            "- First 60 tokens: environment + composition + inherited visual traits.\n"
+            "- Subject > Style > Composition > Lighting > Color > Details.\n"
+            "- For background scenes: Ensure 'empty scene, no people' is prioritized.\n"
+            "Return only JSON with 'positive_prompt' and 'negative_prompt'."
+        )
+    else:
+        _VLM_FUSION_PROMPT = (
+            "You are a VLM Prompt Engineer for SD 3.5.\n"
+            "Step 1: Analyze the input image's layout and color.\n"
+            "Step 2: Extract any visible text from the image and include it in the scene understanding.\n"
+            "Step 3: Combine image analysis with the user's request: {user_input}.\n"
+            "Step 4: Follow these STRICT RULES:\n"
+            "- Positive Prompt: First 60 tokens for environment + composition. Order: Subject > Style > Composition > Lighting > Color > Details.\n"
+            "- Negative Prompt: Explicitly list specific objects, elements, or colors that must NOT appear in the scene (e.g., 'people, text, cars'). Do not use abstract quality terms like 'bad anatomy' or 'low quality'.\n"
+            "- For background scenes: Ensure 'empty scene, no people' is prioritized in the positive prompt.\n"
+            "Return only JSON with 'positive_prompt' and 'negative_prompt'."
+            )
 
     _DEFAULT_NEGATIVE_PROMPT = (
         "low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, "
