@@ -4,7 +4,17 @@ assets/external/
 *.db
 __pycache__/
 .states
-.security/
+.env
 .venv/
+venv/
 .vscode/
 .idea/
+
+# Logs
+*.log
+server.log
+
+# Data and Outputs
+data/images/*/
+data/comfyui/output/
+
