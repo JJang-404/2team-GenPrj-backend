@@ -65,3 +65,27 @@ ollama_url = http://nabidream.duckdns.org:11139
 저장된 이미지가 아니라 이미지를 리액트 클라이언로부터 받고 이를 
 다시 ollama로 보내서 작업을 해야 합니다.
 
+
+
+
+ commfyui.py 의 florence_vlm 함수를 
+comfyui 에 접속해서  data/comfyui/florencevlm.json/model/makebgimagecomfyui/jobs 
+파일에 이미지를 넣고 생성된 문자열을 가져 오는 것을 만들어 주세요.
+
+comfyui.py
+florence_vlm 의 
+
+
+
+/project/2team-GenPrj-backend/data/test/iceamericano.jpg 파일로 테스트 가능 
+
+
+"You are a VLM Prompt Engineer for SD 3.5.\n"
+            "Step 1: Analyze the input image's layout and color.\n"
+            "Step 2: Extract any visible text from the image and include it in the scene understanding.\n"
+            "Step 3: Combine image analysis with the user's request: {user_input}.\n"
+            "Step 4: Follow these STRICT RULES:\n"
+            "- First 60 tokens: environment + composition + inherited visual traits.\n"
+            "- Subject > Style > Composition > Lighting > Color > Details.\n"
+            "- For background scenes: Ensure 'empty scene, no people' is prioritized.\n"
+            "Return only JSON with 'positive_prompt' and 'negative_prompt'."

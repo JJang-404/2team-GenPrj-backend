@@ -1,4 +1,137 @@
 
+from fastapi import Body, APIRouter
+router = APIRouter(prefix="/addhelper/model", tags=["addhelper-model"])
+import uuid
+import threading
+vlmgpt_jobs = {}
+
+def _run_vlmgpt_job(job_id, payload):
+    try:
+        image_base64 = payload.get("image_base64")
+        if not image_base64:
+            vlmgpt_jobs[job_id]["status"] = "failed"
+            vlmgpt_jobs[job_id]["error"] = "image_base64 필수 입력"
+            return
+        if image_base64.startswith("data:"):
+            image_base64 = image_base64.split(",", 1)[-1]
+        image_bytes = base64.b64decode(image_base64)
+        client = comfyui.ComfyUIClient()
+        vlm_text = client.florence_vlm(image_bytes=image_bytes, image_name="input.png")
+        prompt = payload.get("prompt", "")
+        positive_prompt = payload.get("positive_prompt", "")
+        negative_prompt = payload.get("negative_prompt", "")
+        openai_job = openai.OpenAiJob()
+        prompt_bundle = openai_job.build_prompt_bundle(
+            prompt=vlm_text if not prompt else prompt,
+            positive_prompt=positive_prompt,
+            negative_prompt=negative_prompt,
+        )
+        images = client.generate_images(
+            positive_text=prompt_bundle.positive_prompt,
+            negative_text=prompt_bundle.negative_prompt,
+        )
+        if not images:
+            vlmgpt_jobs[job_id]["status"] = "failed"
+            vlmgpt_jobs[job_id]["error"] = "ComfyUI 이미지 생성 실패"
+            return
+        image_bytes_out = images[0]
+        image_base64_out = base64.b64encode(image_bytes_out).decode("utf-8")
+        vlmgpt_jobs[job_id]["status"] = "done"
+        vlmgpt_jobs[job_id]["result"] = {
+            "vlm_text": vlm_text,
+            "positive_prompt": prompt_bundle.positive_prompt,
+            "negative_prompt": prompt_bundle.negative_prompt,
+            "image_base64": image_base64_out,
+            "content_type": "image/png",
+        }
+    except Exception as ex:
+        vlmgpt_jobs[job_id]["status"] = "failed"
+        vlmgpt_jobs[job_id]["error"] = str(ex)
+
+@router.post("/generate_vlm_gpt_image/jobs")
+async def create_vlmgpt_job(payload: dict = Body(...)):
+    job_id = str(uuid.uuid4())
+    vlmgpt_jobs[job_id] = {"status": "queued"}
+    thread = threading.Thread(target=_run_vlmgpt_job, args=(job_id, payload))
+    thread.start()
+    return {"job_id": job_id, "status": "queued"}
+
+@router.get("/generate_vlm_gpt_image/jobs/{job_id}")
+def get_vlmgpt_job(job_id: str):
+    job = vlmgpt_jobs.get(job_id)
+    if not job:
+        return JSONResponse(status_code=404, content={"error": "job_id not found"})
+    return {"job_id": job_id, "status": job["status"], "error": job.get("error")}
+
+@router.get("/generate_vlm_gpt_image/jobs/{job_id}/result")
+def get_vlmgpt_job_result(job_id: str):
+    job = vlmgpt_jobs.get(job_id)
+    if not job:
+        return JSONResponse(status_code=404, content={"error": "job_id not found"})
+    if job["status"] == "done":
+        return job["result"]
+    elif job["status"] == "failed":
+        return JSONResponse(status_code=500, content={"error": job.get("error", "failed")})
+    else:
+        return JSONResponse(status_code=409, content={"error": "not ready"})
+import base64
+import tempfile
+from app.models import comfyui, openai
+from pathlib import Path
+# VLM+GPT+ComfyUI 통합 이미지 생성 API
+@router.post("/generate_vlm_gpt_image")
+async def generate_vlm_gpt_image(
+    payload: dict = Body(...)
+):
+    try:
+        # 1. 이미지 디코딩
+        image_base64 = payload.get("image_base64")
+        if not image_base64:
+            return JSONResponse(content=get_error_response("image_base64 필수 입력"))
+        if image_base64.startswith("data:"):
+            image_base64 = image_base64.split(",", 1)[-1]
+        image_bytes = base64.b64decode(image_base64)
+
+        # 2. Florence VLM으로 이미지 설명 추출
+        client = comfyui.ComfyUIClient()
+        vlm_text = client.florence_vlm(image_bytes=image_bytes, image_name="input.png")
+
+        # 3. GPT로 프롬프트 번들 최적화
+        prompt = payload.get("prompt", "")
+        positive_prompt = payload.get("positive_prompt", "")
+        negative_prompt = payload.get("negative_prompt", "")
+        openai_job = openai.OpenAiJob()
+        prompt_bundle = openai_job.build_prompt_bundle(
+            prompt=vlm_text if not prompt else prompt,
+            positive_prompt=positive_prompt,
+            negative_prompt=negative_prompt,
+        )
+
+        # 4. ComfyUI로 이미지 생성 (positive_prompt/negative_prompt 사용)
+        images = client.generate_images(
+            positive_text=prompt_bundle.positive_prompt,
+            negative_text=prompt_bundle.negative_prompt,
+        )
+        if not images:
+            return JSONResponse(content=get_error_response("ComfyUI 이미지 생성 실패"))
+        image_bytes_out = images[0]
+        image_base64_out = base64.b64encode(image_bytes_out).decode("utf-8")
+
+        return JSONResponse(content={
+            "result": "ok",
+            "vlm_text": vlm_text,
+            "positive_prompt": prompt_bundle.positive_prompt,
+            "negative_prompt": prompt_bundle.negative_prompt,
+            "image_base64": image_base64_out,
+            "content_type": "image/png",
+        })
+    except Exception as ex:
+        return JSONResponse(content={
+            "result": "error",
+            "error": str(ex),
+        })
+
+
 from typing import Any
 
 from fastapi import APIRouter
@@ -28,7 +161,6 @@ from ._model_comfyui import (
     _makebgimagecomfyui_sync_impl,
 )
 
-router = APIRouter(prefix="/addhelper/model", tags=["addhelper-model"])
 
 
 def get_ok_response(extra: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -248,3 +380,5 @@ def get_makebgimagecomfyui_job(job_id: str) -> JSONResponse:
 @router.get("/makebgimagecomfyui/jobs/{job_id}/result")
 def get_makebgimagecomfyui_job_result(job_id: str) -> Response:
     return _build_job_result_response("makebgimagecomfyui", job_id)
+
+

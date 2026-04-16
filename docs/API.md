@@ -1,84 +1,233 @@
-# React API 호출 가이드
+## 11. VLM+GPT+ComfyUI 통합 이미지 생성 API
 
-이 문서는 현재 백엔드의 REST API를 React에서 호출하는 방법을 정리한 문서입니다.
+### 11-1. 엔드포인트
 
-현재 백엔드는 두 가지 방식의 API를 제공합니다.
-
-1. `_sync` 동기 API
-2. `.../jobs` 비동기 API
-
-권장 사항은 아래와 같습니다.
-
-1. `generate_sync`, `changeimage_sync`, `makebgimage_sync`, `makebgimageollama_sync`, `generatecomfyui_sync`, `changeimagecomfyui_sync`, `makebgimagecomfyui_sync`는 테스트 또는 짧은 작업에만 사용합니다.
-2. 실제 서비스 화면에서는 `.../jobs` 비동기 API 사용을 권장합니다.
-3. 긴 작업을 동기 API로 호출하면 프론트보다 앞단의 서버나 게이트웨이에서 504가 발생할 수 있습니다.
-
-## 1. 기본 서버 주소
-
-개발 환경 예시:
-
-```text
-https://gen-proj.duckdns.org
+```
+POST /addhelper/model/generate_vlm_gpt_image
 ```
 
-React에서는 보통 아래처럼 API 기본 주소를 하나로 관리하는 것이 좋습니다.
+
+> ⚠️ Ollama 기반 프롬프트 생성은 반드시 `https://gen-proj.duckdns.org/ollama` 경로만 사용합니다. 백엔드 설정(`backend.ini`의 `[ollama] ollama_url`)과 코드 모두 이 주소만 호출해야 하며, 다른 주소로의 호출은 허용되지 않습니다.
+
+이미지(base64), 프롬프트, 포지티브/네거티브 프롬프트를 받아
+1. 이미지에서 VLM(Florence)로 설명 텍스트 추출
+2. 해당 텍스트와 입력 프롬프트들을 GPT(OpenAI)로 최적화
+3. ComfyUI로 이미지를 생성하여 반환합니다.
+
+### 11-2. 요청 바디 예시
+
+```json
+{
+	"image_base64": "data:image/png;base64,... 또는 순수 base64 문자열",
+	"prompt": "광고용 커피 사진 스타일로 변환",
+	"positive_prompt": "high detail, commercial, coffee, 8k",
+	"negative_prompt": "blurry, low quality"
+}
+```
+
+### 11-3. 응답 예시
+
+```json
+{
+	"result": "ok",
+	"vlm_text": "A white coffee cup on a saucer...", // VLM이 추출한 이미지 설명
+	"positive_prompt": "high detail, commercial, coffee, 8k",
+	"negative_prompt": "blurry, low quality",
+	"image_base64": "iVBORw0KGgoAAAANSUhEUgAA...", // 생성된 이미지 base64 (data: 접두사 없음)
+	"content_type": "image/png"
+}
+```
+
+실패 시:
+
+```json
+{
+	"result": "error",
+	"error": "오류 메시지"
+}
+```
+
+### 11-4. React fetch 예시
+
+```tsㅔㅛ
+type VlmGptImagePayload = {
+	image_base64: string;
+	prompt?: string;
+	positive_prompt?: string;
+	negative_prompt?: string;
+};
+
+export async function generateVlmGptImage(payload: VlmGptImagePayload) {
+	const response = await fetch(`${API_BASE_URL}/addhelper/model/generate_vlm_gpt_image`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(payload),
+	});
+	const json = await response.json();
+	if (json.result !== 'ok') throw new Error(json.error || '이미지 생성 실패');
+	return json;
+}
+```
+
+# React 연동을 위한 API 사용 가이드
+
+이 문서는 React 프론트엔드에서 본 백엔드 REST API를 쉽게 사용할 수 있도록 예시 코드와 주의사항을 포함해 정리한 문서입니다.
+
+---
+
+## 1. API 서버 주소
 
 ```ts
 export const API_BASE_URL = 'https://gen-proj.duckdns.org';
 ```
 
-## 2. 제공 API 목록
+---
 
-### 2-1. 공통 API
+## 2. 주요 엔드포인트
 
-```text
-GET  /addhelper/model/test
+### 2-1. 통합 이미지 생성 (VLM+GPT+ComfyUI)
+- **POST** `/addhelper/model/generate_vlm_gpt_image`
+- 이미지(base64), 프롬프트 등 전달 → 이미지 설명 추출, 프롬프트 최적화, 이미지 생성
+
+#### 요청 예시
+```json
+{
+	"image_base64": "data:image/png;base64,...",
+	"prompt": "광고용 커피 사진 스타일로 변환",
+	"positive_prompt": "high detail, commercial, coffee, 8k",
+	"negative_prompt": "blurry, low quality"
+}
 ```
 
-### 2-2. 동기 API
-
-```text
-GET  /addhelper/model/generate_sync
-POST /addhelper/model/changeimage_sync
-POST /addhelper/model/makebgimage_sync
-POST /addhelper/model/makebgimageollama_sync
-
-GET  /addhelper/model/generatecomfyui_sync
-POST /addhelper/model/changeimagecomfyui_sync
-POST /addhelper/model/makebgimagecomfyui_sync
+#### 응답 예시
+```json
+{
+	"result": "ok",
+	"vlm_text": "A white coffee cup on a saucer...",
+	"positive_prompt": "high detail, commercial, coffee, 8k",
+	"negative_prompt": "blurry, low quality",
+	"image_base64": "iVBORw0KGgoAAAANSUhEUgAA...",
+	"content_type": "image/png"
+}
 ```
 
-### 2-3. 비동기 API
+---
 
-```text
-POST /addhelper/model/generate/jobs
-GET  /addhelper/model/generate/jobs/{job_id}
-GET  /addhelper/model/generate/jobs/{job_id}/result
+## 3. 동기/비동기 API
 
-POST /addhelper/model/changeimage/jobs
-GET  /addhelper/model/changeimage/jobs/{job_id}
-GET  /addhelper/model/changeimage/jobs/{job_id}/result
+- **동기(sync)**: 테스트/짧은 작업용 (ex. `/generate_sync`)
+- **비동기(jobs)**: 실제 서비스 권장 (ex. `/generate/jobs`)
 
-POST /addhelper/model/makebgimage/jobs
-GET  /addhelper/model/makebgimage/jobs/{job_id}
-GET  /addhelper/model/makebgimage/jobs/{job_id}/result
+### 동기 API 예시
+- `GET /addhelper/model/generate_sync`
+- `POST /addhelper/model/changeimage_sync`
+- `POST /addhelper/model/makebgimage_sync`
+- `POST /addhelper/model/makebgimageollama_sync`
+- `GET /addhelper/model/generatecomfyui_sync`
+- `POST /addhelper/model/changeimagecomfyui_sync`
+- `POST /addhelper/model/makebgimagecomfyui_sync`
 
-POST /addhelper/model/makebgimageollama/jobs
-GET  /addhelper/model/makebgimageollama/jobs/{job_id}
-GET  /addhelper/model/makebgimageollama/jobs/{job_id}/result
+### 비동기 API 예시
+- `POST /addhelper/model/generate/jobs`
+- `GET /addhelper/model/generate/jobs/{job_id}`
+- `GET /addhelper/model/generate/jobs/{job_id}/result`
+- (changeimage, makebgimage, comfyui 등 동일 패턴)
 
-POST /addhelper/model/generatecomfyui/jobs
-GET  /addhelper/model/generatecomfyui/jobs/{job_id}
-GET  /addhelper/model/generatecomfyui/jobs/{job_id}/result
+---
 
-POST /addhelper/model/changeimagecomfyui/jobs
-GET  /addhelper/model/changeimagecomfyui/jobs/{job_id}
-GET  /addhelper/model/changeimagecomfyui/jobs/{job_id}/result
+## 4. 요청/응답 규칙
 
-POST /addhelper/model/makebgimagecomfyui/jobs
-GET  /addhelper/model/makebgimagecomfyui/jobs/{job_id}
-GET  /addhelper/model/makebgimagecomfyui/jobs/{job_id}/result
+- `prompt`: 기본 입력값
+- `positive_prompt`, `negative_prompt`: 선택 입력값 (없으면 백엔드가 보완)
+- 이미지 API는 `image_base64` 필요 (data: 접두사 또는 순수 base64 모두 허용)
+- 동기 API 성공 시 이미지 바이너리 반환, 실패 시 JSON 에러 반환
+- 비동기 jobs API는 job_id로 상태 폴링 후 결과 조회
+
+---
+
+## 5. React fetch 예시
+
+### 5-1. 통합 이미지 생성 호출
+```ts
+type VlmGptImagePayload = {
+	image_base64: string;
+	prompt?: string;
+	positive_prompt?: string;
+	negative_prompt?: string;
+};
+
+export async function generateVlmGptImage(payload: VlmGptImagePayload) {
+	const response = await fetch(`${API_BASE_URL}/addhelper/model/generate_vlm_gpt_image`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(payload),
+	});
+	const json = await response.json();
+	if (json.result !== 'ok') throw new Error(json.error || '이미지 생성 실패');
+	return json;
+}
 ```
+
+### 5-2. 비동기 jobs 호출 예시
+```ts
+export async function runImageJob<TPayload>(
+	jobCreatePath: string,
+	payload: TPayload,
+	options?: { pollIntervalMs?: number; timeoutMs?: number },
+) {
+	// ...생략(폴링 및 결과 blob 반환)...
+}
+```
+- 사용 예: `await runImageJob('/addhelper/model/generate/jobs', { prompt, ... })`
+
+---
+
+## 6. 파일 → base64 변환
+
+```ts
+export function fileToBase64(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = () => {
+			const result = reader.result;
+			if (typeof result !== 'string') {
+				reject(new Error('파일을 읽지 못했습니다.'));
+				return;
+			}
+			resolve(result);
+		};
+		reader.onerror = reject;
+		reader.readAsDataURL(file);
+	});
+}
+```
+
+---
+
+## 7. 에러 처리
+
+```ts
+async function parseJsonError(response: Response, fallbackMessage: string) {
+	const contentType = response.headers.get('content-type') || '';
+	if (contentType.includes('application/json')) {
+		const errorBody = await response.json();
+		throw new Error(errorBody.statusMsg || errorBody.detail || fallbackMessage);
+	}
+	throw new Error(fallbackMessage);
+}
+```
+
+---
+
+## 8. 참고 사항
+
+- 실제 서비스에서는 반드시 비동기(jobs) API 사용 권장
+- 긴 작업을 동기 API로 호출 시 504 등 오류 발생 가능
+- 모든 API는 예외 상황에 대한 에러 핸들링 필수
+
+---
+
+React에서 바로 사용할 수 있도록 예시 코드와 규칙을 위주로 정리했습니다. 추가적으로 필요한 엔드포인트나 상세 예시가 있으면 말씀해 주세요!
 
 ## 3. 요청 규칙
 
@@ -623,19 +772,39 @@ export async function changeImageComfyUiAsync(payload: ChangeImageComfyUiPayload
 }
 ```
 
-### 6-8. makebgimagecomfyui jobs 호출
+### 6-8. makebgimagecomfyui jobs (비동기) API
 
-```ts
-export async function makeBgImageComfyUiAsync(payload: MakeBgImagePayload) {
-	return await runImageJob('/addhelper/model/makebgimagecomfyui/jobs', {
-		prompt: payload.prompt,
-		image_base64: payload.image_base64,
-		task_prompt: payload.task_prompt ?? '<DETAILED_CAPTION>',
-		positive_prompt: payload.positive_prompt,
-		negative_prompt: payload.negative_prompt,
-	});
+- 엔드포인트:
+  - `POST /addhelper/model/makebgimagecomfyui/jobs`
+  - `GET  /addhelper/model/makebgimagecomfyui/jobs/{job_id}`
+  - `GET  /addhelper/model/makebgimagecomfyui/jobs/{job_id}/result`
+
+- 요청 바디 예시:
+```json
+{
+  "prompt": "카페 배경으로 만들어주세요",
+  "image_base64": "data:image/png;base64,... 또는 순수 base64 문자열",
+  "task_prompt": "<DETAILED_CAPTION>",
+  "positive_prompt": "warm indoor cafe, empty background",
+  "negative_prompt": "person, people, text, watermark"
 }
 ```
+
+- 설명:
+  - prompt(필수): 배경 스타일/분위기 설명
+  - image_base64(필수): base64 인코딩된 이미지
+  - task_prompt(선택): 업스트림 image2text 태스크 프롬프트 (기본값: <DETAILED_CAPTION>)
+  - positive_prompt/negative_prompt(선택): 추가 프롬프트
+
+- 응답 예시 (성공):
+  - `GET /addhelper/model/makebgimagecomfyui/jobs/{job_id}/result`에서 반환
+  - 이미지 바이너리(blob) 또는 base64, 상태값 등
+
+- 주의사항:
+  - 422 에러 발생 시 prompt, image_base64 필수값 누락 여부 확인
+  - jobs API는 비동기 방식으로, 먼저 job_id를 받고 상태를 폴링해야 함
+
+---
 
 ## 7. React에서 파일을 base64로 변환하는 방법
 

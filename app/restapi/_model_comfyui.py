@@ -3,6 +3,7 @@ import base64
 from pydantic import BaseModel, Field
 
 from app.models.comfyui import ComfyUIClient
+from app.models.gemma4ollama import Gemma4OllamaService
 from app.models.openai import OpenAiJob, PromptBundle
 
 from ._model_engine import (
@@ -109,31 +110,25 @@ def _changeimagecomfyui_sync_impl(req: ChangeImageComfyUiRequest) -> tuple[bytes
 
 def _makebgimagecomfyui_sync_impl(req: MakeBgImageRequest) -> tuple[bytes, str]:
     raw_base64 = _strip_and_validate_image_base64(req.image_base64, "image_base64는 필수입니다.")
-    caption_text = _extract_text_from_image_base64(
+    
+    ollama = Gemma4OllamaService()
+    positive_prompt = req.positive_prompt if req.positive_prompt is not None else ""
+    negative_prompt = req.negative_prompt if req.negative_prompt is not None else ""
+    results =  ollama.generate_background_byimage(
         raw_base64=raw_base64,
-        task_prompt=(req.task_prompt or "<DETAILED_CAPTION>").strip() or "<DETAILED_CAPTION>",
-    )
+        prompt=req.prompt,
+        positive_prompt=positive_prompt,
+        negative_prompt=negative_prompt,)
 
-    translator = OpenAiJob()
-    prompt_bundle = translator.build_background_prompt_bundle(
-        caption_text=caption_text,
-        user_prompt=req.prompt,
-        positive_prompt=req.positive_prompt,
-        negative_prompt=req.negative_prompt,
-    )
-    prompt_bundle = PromptBundle(
-        positive_prompt=translator.change_kor_to_eng(prompt_bundle.positive_prompt),
-        negative_prompt=translator.change_kor_to_eng(prompt_bundle.negative_prompt),
-    )
-    print(
-        "[makebgimagecomfyui] english normalized "
-        f"positive_len={len(prompt_bundle.positive_prompt)}, "
-        f"negative_len={len(prompt_bundle.negative_prompt)}"
-    )
+    positive_prompt = results.get("positive_prompt", "")
+    negative_prompt = results.get("negative_prompt", "")
+
+    print(f"ComfyUI용 positive_prompt: {positive_prompt}")
+    print(f"ComfyUI용 negative_prompt: {negative_prompt}")
 
     client = _create_comfyui_client()
     images = client.generate_images(
-        positive_text=prompt_bundle.positive_prompt,
-        negative_text=prompt_bundle.negative_prompt,
+        positive_text=positive_prompt,
+        negative_text=negative_prompt,
     )
     return _extract_first_comfyui_image(images)

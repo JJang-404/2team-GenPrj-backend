@@ -224,3 +224,61 @@ class Gemma4OllamaService:
         )
         return bundle
     
+    def generate_background_byimage(
+        self,
+        raw_base64: str,
+        prompt: str,
+        positive_prompt = "",
+        negative_prompt = ""
+        ) -> dict:
+        print(
+            "[Gemma4OllamaService] generate_background_byimage start "
+        )
+
+        ollama_prompt = """
+            [STRICT RULES]
+            1. Respond ONLY with the final prompt in English. 
+            2. Do not include introductory phrases like "Here is the prompt" or "The image shows".
+            3. Use a descriptive, tag-based or natural language style suitable for SD 3.5.
+            4. Focus on: Composition, Lighting(cinematic, soft studio light, etc.), Texture, and Color Palette.
+            5. If the image has text, incorporate it naturally as "text that says '...'" or "typography".
+
+            analyze this image and write an expert-level Stable Diffusion 3.5 prompt. 
+            [Prompt Structure]
+            - Core Subject: (Describe the main object/scene in detail)
+            - Environment & Background: (Describe the setting, depth of field)
+            - Lighting & Style: (8k resolution, commercial photography, highly detailed, realistic textures)
+            - Negative traits to avoid: (No blur, no low quality, no extra limbs)
+            """
+            
+
+        request_payload = {
+            "model": self.model_name,
+            "prompt": ollama_prompt,
+            "images": [raw_base64],
+            "stream": False,
+            "format": "json",
+        }
+        request = Request(
+            f"{self.ollama_url}/api/generate",
+            data=json.dumps(request_payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        print(
+            "[Gemma4OllamaService] calling ollama generate "
+            f"url={self.ollama_url}/api/generate, model={self.model_name}"
+        )
+
+        with urlopen(request, timeout=self.ollama_wait_time) as upstream_response:
+            body = upstream_response.read()
+        print(f"[Gemma4OllamaService] ollama response received body_len={len(body)}")
+
+        decoded = json.loads(body.decode("utf-8", errors="ignore"))
+        response_text = str(decoded.get("response") or "").strip()
+        if not response_text:
+            raise RuntimeError("Ollama 응답에 response 텍스트가 없습니다.")
+
+        openai = OpenAiJob()
+        return openai.build_prompt_dual_prompt(response_text,prompt,positive_prompt,negative_prompt)
+         

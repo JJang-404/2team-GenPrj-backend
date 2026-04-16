@@ -68,7 +68,28 @@ class OpenAiJob:
 			
 			"Return strict JSON only with keys positive_prompt and negative_prompt."
 		)
-		
+		self._translate_to_sd35_dual_prompt = (
+			"Translate the given Korean or mixed-language image prompt into optimized English for Stable Diffusion 3.5. "
+			"You are an expert prompt engineer for Stable Diffusion 3.5. "
+			"Your task is to take image descriptions (from Vision LLM) and user prompts (Korean/English) "
+			"to generate a structured 'Positive Prompt' and 'Negative Prompt'.\n\n"
+
+			"### POSITIVE PROMPT RULES:\n"
+			"1. Structure: [Subject], [Style], [Composition], [Lighting], [Color], [Details].\n"
+			"2. Priority: Put the most critical visual elements in the first 60~70 tokens.\n"
+			"3. Style: Use comma-separated keywords, NOT full sentences.\n"
+			"4. Length: Concise, ideally under 100 tokens total.\n\n"
+
+			"### NEGATIVE PROMPT RULES:\n"
+			"1. List elements that should NEVER appear (e.g., anatomical errors, low quality, text, blurry).\n"
+			"2. Standard SD 3.5 negative constraints: (low quality, worst quality, text, watermark, deformed, ugly, blurry).\n\n"
+
+			"### OUTPUT FORMAT:\n"
+			"You MUST return the result in the following format exactly:\n"
+			"Positive: [The generated positive prompt]\n"
+			"Negative: [The generated negative prompt]"
+		)
+			
 		self._default_negative_prompt = (
 			"low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, "
 			"cropped, watermark, text, logo, duplicate, oversaturated"
@@ -295,6 +316,78 @@ class OpenAiJob:
 				positive_prompt=fallback_positive,
 				negative_prompt=fallback_negative,
 			)
+		
+
+	def build_prompt_dual_prompt(
+		self,
+		vlmtext: str,
+		user_prompt: str,
+		positive_prompt: str = "",
+		negative_prompt: str = "",
+		style: str = "",
+		composition: str = "",
+	) -> dict:
+		"""
+		Vision LLM 텍스트(vlmtext), 유저 프롬프트, 스타일, 컴포지션 등 4가지 텍스트를 받아
+		_translate_to_sd35_dual_prompt 프롬프트로 GPT에 전달하여 positive/negative 프롬프트를 생성합니다.
+		"""
+		# 입력 정규화
+		vlmtext = (vlmtext or "").strip()
+		user_prompt = (user_prompt or "").strip()
+		positive_prompt = (positive_prompt or "").strip()
+		negative_prompt = (negative_prompt or "").strip()
+		style = (style or "").strip()
+		composition = (composition or "").strip()
+
+		# GPT에 넘길 입력 포맷 구성
+		input_payload = {
+			"vlmtext": vlmtext,
+			"user_prompt": user_prompt,
+			"positive_prompt": positive_prompt,
+			"negative_prompt": negative_prompt,
+			"style": style,
+			"composition": composition,
+		}
+		# 프롬프트 메시지 생성
+		system_msg = self._translate_to_sd35_dual_prompt
+		# 입력을 보기 좋게 JSON이 아닌 텍스트로 전달
+		human_msg = (
+			f"[VLM TEXT]: {vlmtext}\n"
+			f"[USER PROMPT]: {user_prompt}\n"
+			f"[POSITIVE PROMPT]: {positive_prompt}\n"
+			f"[NEGATIVE PROMPT]: {negative_prompt}\n"
+			f"[STYLE]: {style}\n"
+			f"[COMPOSITION]: {composition}"
+		)
+		try:
+			messages = [
+				SystemMessage(content=system_msg),
+				HumanMessage(content=human_msg),
+			]
+			result = self._invoke_llm(messages, trace_name="build_prompt_dual_prompt")
+			# 결과 파싱: "Positive: ...\nNegative: ..." 형태
+			content = self._message_content_to_text(result.content)
+			positive, negative = "", ""
+			for line in content.splitlines():
+				if line.strip().lower().startswith("positive:"):
+					positive = line.split(":", 1)[-1].strip()
+				elif line.strip().lower().startswith("negative:"):
+					negative = line.split(":", 1)[-1].strip()
+			if not positive:
+				positive = vlmtext or user_prompt
+			if not negative:
+				negative = self._default_negative_prompt
+			return {
+				"positive_prompt": positive,
+				"negative_prompt": negative,
+			}
+		except Exception as ex:
+			print(f"[build_prompt_dual_prompt Error] {type(ex).__name__}: {ex}")
+			return {
+				"positive_prompt": vlmtext or user_prompt,
+				"negative_prompt": self._default_negative_prompt,
+			}
+	
 
 	def build_ad_copy(
 		self,
