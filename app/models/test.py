@@ -5,7 +5,15 @@ from PIL import Image
 import io
 
 # 1. 설정 정보
-COMFYUI_ADDRESS = "http://nabidream.duckdns.org:8188"  # 로컬 ComfyUI 주소
+import configparser
+
+# backend.ini에서 comfyui_address 읽기
+def get_comfyui_address():
+    config = configparser.ConfigParser()
+    config.read("/project/2team-GenPrj-backend/app/common/backend.ini", encoding="utf-8")
+    return config.get("comfyui", "comfyui_address", fallback="http://gen-proj.duckdns.org:8188").replace('"', '')
+
+COMFYUI_ADDRESS = get_comfyui_address()  # backend.ini에서 읽은 ComfyUI 주소
 OLLAMA_URL = "http://nabidream.duckdns.org:11139/" # 사용자 설정 Ollama 주소
 INPUT_IMAGE_PATH = "/project/2team-GenPrj-backend/data/test/iceamericano.jpg"  # 분석할 이미지 경로
 

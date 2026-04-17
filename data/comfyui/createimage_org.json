@@ -1,7 +1,17 @@
 {
+  "2": {
+    "inputs": {
+      "unet_name": "sd3.5_medium_transformer.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "확산 모델 로드"
+    }
+  },
   "6": {
     "inputs": {
-      "vae_name": "diffusion_pytorch_model.safetensors"
+      "vae_name": "sd3.5_vae.safetensors"
     },
     "class_type": "VAELoader",
     "_meta": {
@@ -10,14 +20,14 @@
   },
   "7": {
     "inputs": {
-      "seed": 405120406849477,
+      "seed": 259697051860647,
       "steps": 20,
       "cfg": 3.5,
       "sampler_name": "euler",
       "scheduler": "sgm_uniform",
-      "denoise": 1,
+      "denoise": 0.87,
       "model": [
-        "23",
+        "2",
         0
       ],
       "positive": [
@@ -40,9 +50,9 @@
   },
   "8": {
     "inputs": {
-      "text": "A professional cafe interior poster background , high quality, cinematic lighting",
+      "text": "A professional cafe interior poster, high quality, cinematic lighting.\ncoffee , cafe, cake",
       "clip": [
-        "25",
+        "20",
         0
       ]
     },
@@ -55,7 +65,7 @@
     "inputs": {
       "text": "text, watermark, blurry, person",
       "clip": [
-        "25",
+        "20",
         0
       ]
     },
@@ -66,8 +76,8 @@
   },
   "10": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 512,
+      "height": 512,
       "batch_size": 1
     },
     "class_type": "EmptyLatentImage",
@@ -104,24 +114,16 @@
       "title": "이미지 저장"
     }
   },
-  "23": {
-    "inputs": {
-      "ckpt_name": "sd3.5_large_fp8_scaled.safetensors"
-    },
-    "class_type": "CheckpointLoaderSimple",
-    "_meta": {
-      "title": "체크포인트 로드"
-    }
-  },
-  "25": {
+  "20": {
     "inputs": {
       "clip_name1": "clip_g.safetensors",
       "clip_name2": "clip_l.safetensors",
-      "clip_name3": "t5xxl_fp8_e4m3fn.safetensors"
+      "type": "sd3",
+      "device": "default"
     },
-    "class_type": "TripleCLIPLoader",
+    "class_type": "DualCLIPLoader",
     "_meta": {
-      "title": "삼중 CLIP 로드"
+      "title": "이중 CLIP 로드"
     }
   }
 }

@@ -92,6 +92,7 @@ import random
 import time
 import uuid
 from pathlib import Path
+from typing import Optional
 
 import requests # pip install requests 필요
 
@@ -100,7 +101,15 @@ CREATE_IMAGE_JSON_PATH = Path(__file__).resolve().parents[2].joinpath("data", "c
 CHANGE_IMAGE_JSON_PATH = Path(__file__).resolve().parents[2].joinpath("data", "comfyui", "changeimage.json")
 OUTPUT_PATH = Path(__file__).resolve().parents[2].joinpath("data", "comfyui", "output")
 
-DEFAULT_COMFYUI_BASE_URL = "http://nabidream.duckdns.org:8188"
+import configparser
+
+# backend.ini에서 comfyui_address 읽기
+def get_comfyui_address():
+    config = configparser.ConfigParser()
+    config.read(Path(__file__).resolve().parents[2].joinpath("app", "common", "backend.ini"), encoding="utf-8")
+    return config.get("comfyui", "comfyui_address", fallback="http://gen-proj.duckdns.org:8188").replace('"', '')
+
+DEFAULT_COMFYUI_BASE_URL = get_comfyui_address()
 
 
 class ComfyUIClient:
@@ -226,7 +235,7 @@ class ComfyUIClient:
         history_entry = self.wait_for_completion(prompt_id)
         return self.fetch_output_images(history_entry)
 
-    def florence_vlm(self, image_bytes: bytes, image_name: str = "", text_input: str = "" , flow_path: Path = None) -> str:
+    def florence_vlm(self, image_bytes: bytes, image_name: str = "", text_input: str = "", flow_path: Optional[Path] = None) -> str:
         """
         Florence VLM 플로우(data/comfyui/florencevlm.json)에 이미지를 넣고,
         생성된 문자열(텍스트)을 반환합니다.

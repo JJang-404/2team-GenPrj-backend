@@ -1,7 +1,17 @@
 {
+  "2": {
+    "inputs": {
+      "unet_name": "sd3.5_medium_transformer.safetensors",
+      "weight_dtype": "default"
+    },
+    "class_type": "UNETLoader",
+    "_meta": {
+      "title": "확산 모델 로드"
+    }
+  },
   "6": {
     "inputs": {
-      "vae_name": "diffusion_pytorch_model.safetensors"
+      "vae_name": "sd3.5_vae.safetensors"
     },
     "class_type": "VAELoader",
     "_meta": {
@@ -10,14 +20,14 @@
   },
   "7": {
     "inputs": {
-      "seed": 488684581235404,
+      "seed": 403085346954721,
       "steps": 20,
       "cfg": 4.5,
       "sampler_name": "euler",
       "scheduler": "sgm_uniform",
-      "denoise": 1,
+      "denoise": 0.6,
       "model": [
-        "20",
+        "2",
         0
       ],
       "positive": [
@@ -40,9 +50,9 @@
   },
   "8": {
     "inputs": {
-      "text": "A professional cafe interior poster background , high quality, cinematic lighting",
+      "text": "A professional cafe interior poster, high quality, cinematic lighting",
       "clip": [
-        "21",
+        "19",
         0
       ]
     },
@@ -55,7 +65,7 @@
     "inputs": {
       "text": "text, watermark, blurry, person",
       "clip": [
-        "21",
+        "19",
         0
       ]
     },
@@ -104,7 +114,7 @@
   },
   "16": {
     "inputs": {
-      "vae_name": "diffusion_pytorch_model.safetensors"
+      "vae_name": "sd3.5_vae.safetensors"
     },
     "class_type": "VAELoader",
     "_meta": {
@@ -131,24 +141,16 @@
       "title": "VAE 디코드 (타일)"
     }
   },
-  "20": {
-    "inputs": {
-      "ckpt_name": "sd3.5_large_fp8_scaled.safetensors"
-    },
-    "class_type": "CheckpointLoaderSimple",
-    "_meta": {
-      "title": "체크포인트 로드"
-    }
-  },
-  "21": {
+  "19": {
     "inputs": {
       "clip_name1": "clip_g.safetensors",
       "clip_name2": "clip_l.safetensors",
-      "clip_name3": "t5xxl_fp8_e4m3fn.safetensors"
+      "type": "sd3",
+      "device": "default"
     },
-    "class_type": "TripleCLIPLoader",
+    "class_type": "DualCLIPLoader",
     "_meta": {
-      "title": "삼중 CLIP 로드"
+      "title": "이중 CLIP 로드"
     }
   }
 }
