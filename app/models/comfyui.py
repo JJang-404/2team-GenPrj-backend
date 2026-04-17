@@ -122,10 +122,17 @@ class ComfyUIClient:
             return json.load(f)
 
     def apply_prompt_text(self, prompt_data: dict, positive_text: str, negative_text: str) -> dict:
-        prompt_data["8"]["inputs"]["text"] = positive_text
-        prompt_data["9"]["inputs"]["text"] = negative_text
+        # KeyError 방지: 노드 존재 여부 확인
+        if "8" in prompt_data and "inputs" in prompt_data["8"]:
+            prompt_data["8"]["inputs"]["text"] = positive_text
+        else:
+            print("[경고] prompt_data에 '8'번 노드가 없거나 구조가 다릅니다.")
+        if "9" in prompt_data and "inputs" in prompt_data["9"]:
+            prompt_data["9"]["inputs"]["text"] = negative_text
+        else:
+            print("[경고] prompt_data에 '9'번 노드가 없거나 구조가 다릅니다.")
         # 매 실행마다 seed를 랜덤화하여 캐시 히트 방지
-        if "7" in prompt_data and "seed" in prompt_data["7"]["inputs"]:
+        if "7" in prompt_data and "seed" in prompt_data["7"].get("inputs", {}):
             prompt_data["7"]["inputs"]["seed"] = random.randint(0, 2**32 - 1)
         return prompt_data
 

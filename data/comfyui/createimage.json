@@ -20,12 +20,12 @@
   },
   "7": {
     "inputs": {
-      "seed": 781334116799306,
+      "seed": 259697051860647,
       "steps": 20,
-      "cfg": 4.5,
+      "cfg": 3.5,
       "sampler_name": "euler",
       "scheduler": "sgm_uniform",
-      "denoise": 1,
+      "denoise": 0.87,
       "model": [
         "2",
         0
@@ -50,9 +50,9 @@
   },
   "8": {
     "inputs": {
-      "text": "A professional cafe interior poster, high quality, cinematic lighting",
+      "text": "A professional cafe interior poster, high quality, cinematic lighting.\ncoffee , cafe, cake",
       "clip": [
-        "13",
+        "20",
         0
       ]
     },
@@ -65,7 +65,7 @@
     "inputs": {
       "text": "text, watermark, blurry, person",
       "clip": [
-        "13",
+        "20",
         0
       ]
     },
@@ -76,8 +76,8 @@
   },
   "10": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 512,
+      "height": 512,
       "batch_size": 1
     },
     "class_type": "EmptyLatentImage",
@@ -114,15 +114,16 @@
       "title": "이미지 저장"
     }
   },
-  "13": {
+  "20": {
     "inputs": {
-      "clip_name1": "clip_l.safetensors",
-      "clip_name2": "clip_g.safetensors",
-      "clip_name3": "t5xxl/t5_part1.safetensors"
+      "clip_name1": "clip_g.safetensors",
+      "clip_name2": "clip_l.safetensors",
+      "type": "sd3",
+      "device": "default"
     },
-    "class_type": "TripleCLIPLoader",
+    "class_type": "DualCLIPLoader",
     "_meta": {
-      "title": "삼중 CLIP 로드"
+      "title": "이중 CLIP 로드"
     }
   }
 }

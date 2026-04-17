@@ -20,7 +20,7 @@
   },
   "7": {
     "inputs": {
-      "seed": 275440536563715,
+      "seed": 403085346954721,
       "steps": 20,
       "cfg": 4.5,
       "sampler_name": "euler",
@@ -52,7 +52,7 @@
     "inputs": {
       "text": "A professional cafe interior poster, high quality, cinematic lighting",
       "clip": [
-        "13",
+        "19",
         0
       ]
     },
@@ -65,7 +65,7 @@
     "inputs": {
       "text": "text, watermark, blurry, person",
       "clip": [
-        "13",
+        "19",
         0
       ]
     },
@@ -74,44 +74,17 @@
       "title": "CLIP 텍스트 인코딩 (프롬프트)"
     }
   },
-  "11": {
-    "inputs": {
-      "samples": [
-        "7",
-        0
-      ],
-      "vae": [
-        "6",
-        0
-      ]
-    },
-    "class_type": "VAEDecode",
-    "_meta": {
-      "title": "VAE 디코드"
-    }
-  },
   "12": {
     "inputs": {
       "filename_prefix": "ComfyUI",
       "images": [
-        "11",
+        "17",
         0
       ]
     },
     "class_type": "SaveImage",
     "_meta": {
       "title": "이미지 저장"
-    }
-  },
-  "13": {
-    "inputs": {
-      "clip_name1": "clip_l.safetensors",
-      "clip_name2": "clip_g.safetensors",
-      "clip_name3": "t5xxl/t5_part1.safetensors"
-    },
-    "class_type": "TripleCLIPLoader",
-    "_meta": {
-      "title": "삼중 CLIP 로드"
     }
   },
   "14": {
@@ -146,6 +119,38 @@
     "class_type": "VAELoader",
     "_meta": {
       "title": "VAE 로드"
+    }
+  },
+  "17": {
+    "inputs": {
+      "tile_size": 512,
+      "overlap": 64,
+      "temporal_size": 64,
+      "temporal_overlap": 8,
+      "samples": [
+        "7",
+        0
+      ],
+      "vae": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "VAEDecodeTiled",
+    "_meta": {
+      "title": "VAE 디코드 (타일)"
+    }
+  },
+  "19": {
+    "inputs": {
+      "clip_name1": "clip_g.safetensors",
+      "clip_name2": "clip_l.safetensors",
+      "type": "sd3",
+      "device": "default"
+    },
+    "class_type": "DualCLIPLoader",
+    "_meta": {
+      "title": "이중 CLIP 로드"
     }
   }
 }
