@@ -1,4 +1,3 @@
-
 from fastapi import Body, APIRouter
 router = APIRouter(prefix="/addhelper/model", tags=["addhelper-model"])
 import uuid
@@ -159,6 +158,8 @@ from ._model_comfyui import (
     _changeimagecomfyui_sync_impl,
     _generate_image_comfyui_sync_impl,
     _makebgimagecomfyui_sync_impl,
+    ChangeImageComfyUiRequest_opt,
+    _changeimagecomfyui_opt_sync_impl,
 )
 
 
@@ -380,5 +381,18 @@ def get_makebgimagecomfyui_job(job_id: str) -> JSONResponse:
 @router.get("/makebgimagecomfyui/jobs/{job_id}/result")
 def get_makebgimagecomfyui_job_result(job_id: str) -> Response:
     return _build_job_result_response("makebgimagecomfyui", job_id)
+
+@router.post("/changeimagecomfyui_opt/jobs")
+async def create_changeimagecomfyui_opt_job(req: ChangeImageComfyUiRequest_opt) -> JSONResponse:
+    job = _create_async_job("changeimagecomfyui_opt", lambda: _changeimagecomfyui_opt_sync_impl(req))
+    return JSONResponse(content=job)
+
+@router.get("/changeimagecomfyui_opt/jobs/{job_id}")
+def get_changeimagecomfyui_opt_job(job_id: str) -> JSONResponse:
+    return _build_job_status_response("changeimagecomfyui_opt", job_id)
+
+@router.get("/changeimagecomfyui_opt/jobs/{job_id}/result")
+def get_changeimagecomfyui_opt_job_result(job_id: str) -> Response:
+    return _build_job_result_response("changeimagecomfyui_opt", job_id)
 
 

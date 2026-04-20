@@ -27,6 +27,17 @@ class ChangeImageComfyUiRequest(BaseModel):
     strength: float = Field(default=0.45, ge=0.0, le=1.0)
 
 
+
+class ChangeImageComfyUiRequest_opt(BaseModel):
+    opt: int = Field(default=0, ge=0, le=2)
+    prompt: str | None = ""
+    positive_prompt: str | None = None
+    negative_prompt: str | None = None
+    image_base64: str = Field(..., min_length=1)
+    strength: float = Field(default=0.45, ge=0.0, le=1.0)
+
+
+
 def _create_comfyui_client() -> ComfyUIClient:
     return ComfyUIClient()
 
@@ -59,6 +70,44 @@ def _build_comfyui_prompt_bundle(
     )
     positive_text = translator.change_kor_to_eng((bundle.positive_prompt or "").strip())
     negative_text = translator.change_kor_to_eng((bundle.negative_prompt or "").strip())
+
+    if not positive_text:
+        raise RuntimeError("ComfyUI용 positive_prompt를 생성하지 못했습니다.")
+
+    return PromptBundle(
+        positive_prompt=positive_text,
+        negative_prompt=negative_text,
+    )
+
+
+
+def _build_comfyui_prompt_bundle_opt(
+    opt: int,
+    prompt: str | None,
+    positive_prompt: str | None,
+    negative_prompt: str | None,
+) -> PromptBundle:
+    normalized_prompt = (prompt or "").strip()
+    normalized_positive = (positive_prompt or "").strip()
+    normalized_negative = (negative_prompt or "").strip()
+
+    # ComfyUI는 최종적으로 positive/negative 텍스트만 받으므로,
+    # prompt가 있으면 OpenAI로 positive/negative를 보완하고 결과를 영문화해 전달한다.
+    if not normalized_prompt and not normalized_positive:
+        raise ValueError("ComfyUI 요청은 prompt 또는 positive_prompt 중 하나가 필요합니다.")
+
+    translator = OpenAiJob()
+    bundle_map = translator.build_prompt_dual_prompt_opt(
+        opt=opt,
+        user_prompt=normalized_prompt,
+        positive_prompt=normalized_positive,
+        negative_prompt=normalized_negative,
+    )
+    if not isinstance(bundle_map, dict):
+        raise RuntimeError("프롬프트 생성 결과가 올바르지 않습니다.")
+
+    positive_text = translator.change_kor_to_eng(str(bundle_map.get("positive_prompt") or "").strip())
+    negative_text = translator.change_kor_to_eng(str(bundle_map.get("negative_prompt") or "").strip())
 
     if not positive_text:
         raise RuntimeError("ComfyUI용 positive_prompt를 생성하지 못했습니다.")
@@ -106,6 +155,32 @@ def _changeimagecomfyui_sync_impl(req: ChangeImageComfyUiRequest) -> tuple[bytes
         strength=req.strength,
     )
     return _extract_first_comfyui_image(images)
+
+
+
+
+
+def _changeimagecomfyui_opt_sync_impl(req: ChangeImageComfyUiRequest_opt) -> tuple[bytes, str]:
+    if req.strength < 0.0 or req.strength > 1.0:
+        raise ValueError("strength는 0.0~1.0 범위여야 합니다.")
+
+    raw_base64 = _strip_and_validate_image_base64(req.image_base64, "image_base64는 필수입니다.")
+    image_bytes = base64.b64decode(raw_base64)
+    prompt_bundle = _build_comfyui_prompt_bundle_opt(
+        opt=req.opt,
+        prompt=req.prompt,
+        positive_prompt=req.positive_prompt,
+        negative_prompt=req.negative_prompt,
+    )
+    client = _create_comfyui_client()
+    images = client.change_image(
+        positive_text=prompt_bundle.positive_prompt,
+        negative_text=prompt_bundle.negative_prompt,
+        image_bytes=image_bytes,
+        strength=req.strength,
+    )
+    return _extract_first_comfyui_image(images)
+
 
 
 def _makebgimagecomfyui_sync_impl(req: MakeBgImageRequest) -> tuple[bytes, str]:

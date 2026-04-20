@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, SecretStr
 from app.common import defines
 
 
-class ChangeImageRequest(BaseModel):
+class ChangeImageRequest(BaseModel):  # 이미지 변경 요청 데이터 모델
 	prompt: str = Field(..., min_length=1)
 	positive_prompt: str | None = None
 	negative_prompt: str | None = None
@@ -20,108 +20,19 @@ class ChangeImageRequest(BaseModel):
 	strength: float = Field(default=0.45, ge=0.0, le=1.0)
 
 
-class PromptBundle(BaseModel):
+class PromptBundle(BaseModel):  # positive/negative 프롬프트 번들
 	positive_prompt: str = Field(default="")
 	negative_prompt: str = Field(default="")
 
 
-class AdCopyBundle(BaseModel):
-	main_copy: str = Field(default="")
-	variants: list[str] = Field(default_factory=list)
-
+class AdCopyBundle(BaseModel):  # 광고 문구 번들
+    main_copy: str = Field(default="")
+    variants: list[str] = Field(default_factory=list)
 
 class OpenAiJob:
-	def __init__(self, model: str = "gpt-5-mini") -> None:
-		env_map = self._read_env_map()
-		self._api_key = self._read_open_api_key(env_map)
-		self._base_prompt_msg = defines.BASE_PROMPT_MSG
-		self._ad_copy_prompt_msg = defines.AD_COPY_PROMPT_MSG
-		self._model = model
-		
-		self._translate_prompt_msg = (
-			"Translate the given Korean or mixed-language image prompt into optimized English for Stable Diffusion 3.5. "
-
-			"IMPORTANT RULES:\n"
-			"1. Put the MOST IMPORTANT visual elements FIRST (subject, style, composition).\n"
-			"2. Keep the first 60~70 tokens highly information-dense.\n"
-			"3. Less important details (lighting nuances, minor descriptors) MUST go at the end.\n"
-			"4. Keep the total prompt concise (prefer under 100 tokens).\n"
-			"5. Use comma-separated keyword style, NOT long sentences.\n"
-			"6. Prioritize in this order:\n"
-			"   subject > style > composition > lighting > color > details\n"
-			
-			"Return only the final prompt."
-		)
-
-		self._bg_prompt_msg = (
-			"You prepare Stable Diffusion 3.5 prompts for background-only scenes.\n"
-			
-			"STRICT RULES:\n"
-			"1. The first 60 tokens MUST define the environment and composition clearly.\n"
-			"2. Start with scene type, environment, and camera composition.\n"
-			"3. Ensure the scene is explicitly empty (no subject).\n"
-			"4. Less important atmosphere details go at the end.\n"
-			
-			"FORMAT RULES:\n"
-			"- Use comma-separated keywords\n"
-			"- No long sentences\n"
-			
-			"Return strict JSON only with keys positive_prompt and negative_prompt."
-		)
-		self._translate_to_sd35_dual_prompt = (
-			"Translate the given Korean or mixed-language image prompt into optimized English for Stable Diffusion 3.5. "
-			"You are an expert prompt engineer for Stable Diffusion 3.5. "
-			"Your task is to take image descriptions (from Vision LLM) and user prompts (Korean/English) "
-			"to generate a structured 'Positive Prompt' and 'Negative Prompt'.\n\n"
-
-			"### POSITIVE PROMPT RULES:\n"
-			"1. Structure: [Subject], [Style], [Composition], [Lighting], [Color], [Details].\n"
-			"2. Priority: Put the most critical visual elements in the first 60~70 tokens.\n"
-			"3. Style: Use comma-separated keywords, NOT full sentences.\n"
-			"4. Length: Concise, ideally under 100 tokens total.\n\n"
-
-			"### NEGATIVE PROMPT RULES:\n"
-			"1. List elements that should NEVER appear (e.g., anatomical errors, low quality, text, blurry).\n"
-			"2. Standard SD 3.5 negative constraints: (low quality, worst quality, text, watermark, deformed, ugly, blurry).\n\n"
-
-			"### OUTPUT FORMAT:\n"
-			"You MUST return the result in the following format exactly:\n"
-			"Positive: [The generated positive prompt]\n"
-			"Negative: [The generated negative prompt]"
-		)
-			
-		self._default_negative_prompt = (
-			"low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, "
-			"cropped, watermark, text, logo, duplicate, oversaturated"
-		)
-		self._langfuse_client = self._build_langfuse_client(env_map)
-		self._langfuse_handler = self._build_langfuse_handler(env_map)
-		self._llm = ChatOpenAI(model=model, temperature=0, api_key=SecretStr(self._api_key))
-
-	def _read_env_map(self) -> dict[str, str]:
-		env_path = Path(__file__).resolve().parents[2] / ".security" / ".env"
-		if not env_path.exists():
-			raise RuntimeError(f"Environment file not found: {env_path}")
-
-		env_map: dict[str, str] = {}
-		for line in env_path.read_text(encoding="utf-8").splitlines():
-			raw = line.strip()
-			if not raw or raw.startswith("#") or "=" not in raw:
-				continue
-
-			key, value = raw.split("=", 1)
-			env_map[key.strip()] = value.strip().strip('"').strip("'")
-
-		return env_map
-
-	def _read_open_api_key(self, env_map: dict[str, str]) -> str:
-		token = (env_map.get("OPEN_API_KEY") or "").strip()
-		if token:
-			return token
-
-		raise RuntimeError("OPEN_API_KEY is missing in .security/.env")
 
 	def _build_langfuse_handler(self, env_map: dict[str, str]) -> Any | None:
+		# Langfuse 콜백 핸들러 동적 생성 (없으면 None)
 		callback_handler_cls = None
 		try:
 			langfuse_langchain = importlib.import_module("langfuse.langchain")
@@ -156,7 +67,103 @@ class OpenAiJob:
 			print(f"[Langfuse] 초기화 실패: {type(ex).__name__}: {ex}")
 			return None
 
+	def _read_open_api_key(self, env_map: dict[str, str]) -> str:
+		# 환경 변수 맵에서 OpenAI API 키 추출
+		token = (env_map.get("OPEN_API_KEY") or "").strip()
+		if token:
+			return token
+		raise RuntimeError("OPEN_API_KEY is missing in .security/.env")
+
+	def __init__(self, model: str = "gpt-5-mini") -> None:
+		# OpenAI 기반 LLM 작업 클래스. 환경 변수, 프롬프트, LLM 객체 초기화
+		env_map = self._read_env_map()
+		self._api_key = self._read_open_api_key(env_map)
+		self._base_prompt_msg = defines.BASE_PROMPT_MSG
+		self._ad_copy_prompt_msg = defines.AD_COPY_PROMPT_MSG
+		self._model = model
+		
+		# 한글 프롬프트를 SD 3.5용 영어 프롬프트로 변환하는 시스템 메시지
+		self._translate_prompt_msg = (
+			"Translate the given Korean or mixed-language image prompt into optimized English for Stable Diffusion 3.5. "
+
+			"IMPORTANT RULES:\n"
+			"1. Put the MOST IMPORTANT visual elements FIRST (subject, style, composition).\n"
+			"2. Keep the first 60~70 tokens highly information-dense.\n"
+			"3. Less important details (lighting nuances, minor descriptors) MUST go at the end.\n"
+			"4. Keep the total prompt concise (prefer under 100 tokens).\n"
+			"5. Use comma-separated keyword style, NOT long sentences.\n"
+			"6. Prioritize in this order:\n"
+			"   subject > style > composition > lighting > color > details\n"
+			
+			"Return only the final prompt."
+		)
+
+		# 배경 전용 프롬프트 생성용 시스템 메시지
+		self._bg_prompt_msg = (
+			"You prepare Stable Diffusion 3.5 prompts for background-only scenes.\n"
+			
+			"STRICT RULES:\n"
+			"1. The first 60 tokens MUST define the environment and composition clearly.\n"
+			"2. Start with scene type, environment, and camera composition.\n"
+			"3. Ensure the scene is explicitly empty (no subject).\n"
+			"4. Less important atmosphere details go at the end.\n"
+			
+			"FORMAT RULES:\n"
+			"- Use comma-separated keywords\n"
+			"- No long sentences\n"
+			
+			"Return strict JSON only with keys positive_prompt and negative_prompt."
+		)
+		# SD 3.5용 positive/negative 프롬프트 동시 생성 시스템 메시지
+		self._translate_to_sd35_dual_prompt = (
+			"Translate the given Korean or mixed-language image prompt into optimized English for Stable Diffusion 3.5. "
+			"You are an expert prompt engineer for Stable Diffusion 3.5. "
+			"Your task is to take image descriptions (from Vision LLM) and user prompts (Korean/English) "
+			"to generate a structured 'Positive Prompt' and 'Negative Prompt'.\n\n"
+
+			"### POSITIVE PROMPT RULES:\n"
+			"1. Structure: [Subject], [Style], [Composition], [Lighting], [Color], [Details].\n"
+			"2. Priority: Put the most critical visual elements in the first 60~70 tokens.\n"
+			"3. Style: Use comma-separated keywords, NOT full sentences.\n"
+			"4. Length: Concise, ideally under 100 tokens total.\n\n"
+
+			"### NEGATIVE PROMPT RULES:\n"
+			"1. List elements that should NEVER appear (e.g., anatomical errors, low quality, text, blurry).\n"
+			"2. Standard SD 3.5 negative constraints: (low quality, worst quality, text, watermark, deformed, ugly, blurry).\n\n"
+
+			"### OUTPUT FORMAT:\n"
+			"You MUST return the result in the following format exactly:\n"
+			"Positive: [The generated positive prompt]\n"
+			"Negative: [The generated negative prompt]"
+		)
+			
+		# 기본 negative 프롬프트
+		self._default_negative_prompt = (
+			"low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, "
+			"cropped, watermark, text, logo, duplicate, oversaturated"
+		)
+		self._langfuse_client = self._build_langfuse_client(env_map)
+		self._langfuse_handler = self._build_langfuse_handler(env_map)
+		self._llm = ChatOpenAI(model=model, temperature=0, api_key=SecretStr(self._api_key))
+
+	def _read_env_map(self) -> dict[str, str]:
+		# .security/.env 파일에서 환경 변수 맵을 읽어옴
+		env_path = Path(__file__).resolve().parents[2] / ".security" / ".env"
+		if not env_path.exists():
+			raise RuntimeError(f"Environment file not found: {env_path}")
+
+		env_map: dict[str, str] = {}
+		for line in env_path.read_text(encoding="utf-8").splitlines():
+			raw = line.strip()
+			if not raw or raw.startswith("#") or "=" not in raw:
+				continue
+
+			key, value = raw.split("=", 1)
+			env_map[key.strip()] = value.strip().strip('"').strip("'")
+		return env_map
+
 	def _build_langfuse_client(self, env_map: dict[str, str]) -> Any | None:
+		# Langfuse 클라이언트 동적 생성 (없으면 None)
 		public_key = (env_map.get("LANGFUSE_PUBLIC_KEY") or "").strip()
 		secret_key = (env_map.get("LANGFUSE_SECRET_KEY") or "").strip()
 		base_url = (env_map.get("LANGFUSE_BASE_URL") or "").strip()
@@ -179,6 +186,7 @@ class OpenAiJob:
 			return None
 
 	def _invoke_llm(self, messages: list[SystemMessage | HumanMessage], trace_name: str):
+		# LLM 호출 래퍼 (Langfuse trace 지원)
 		if self._langfuse_handler is None:
 			return self._llm.invoke(messages)
 
@@ -192,9 +200,11 @@ class OpenAiJob:
 		)
 
 	def _contains_korean(self, text: str) -> bool:
+		# 문자열에 한글 포함 여부 확인
 		return any("가" <= char <= "힣" for char in text)
 
 	def _strip_code_fence(self, content: str) -> str:
+		# 코드펜스(```) 제거 및 내용 정제
 		cleaned = (content or "").strip()
 		if cleaned.startswith("```"):
 			parts = cleaned.split("```")
@@ -203,6 +213,7 @@ class OpenAiJob:
 		return cleaned
 
 	def _parse_prompt_bundle(self, content: str) -> PromptBundle:
+		# JSON 문자열에서 PromptBundle 파싱
 		cleaned = self._strip_code_fence(content)
 		start_index = cleaned.find("{")
 		end_index = cleaned.rfind("}")
@@ -216,6 +227,7 @@ class OpenAiJob:
 		)
 
 	def _parse_ad_copy_bundle(self, content: str) -> AdCopyBundle:
+		# JSON 문자열에서 AdCopyBundle 파싱
 		cleaned = self._strip_code_fence(content)
 		start_index = cleaned.find("{")
 		end_index = cleaned.rfind("}")
@@ -232,6 +244,7 @@ class OpenAiJob:
 		)
 
 	def _message_content_to_text(self, content: str | list[str | dict[Any, Any]]) -> str:
+		# LLM 응답 content를 텍스트로 변환
 		if isinstance(content, str):
 			return content.strip()
 
@@ -247,6 +260,7 @@ class OpenAiJob:
 		return "\n".join(part.strip() for part in parts if part).strip()
 
 	def change_kor_to_eng(self, kor_str: str) -> str:
+		# 한글 프롬프트를 영어로 번역 (LLM 사용)
 		if not kor_str or not kor_str.strip():
 			return ""
 
@@ -263,9 +277,11 @@ class OpenAiJob:
 			return kor_str
 
 	def changeKor2Eng(self, korStr: str) -> str:
+		# change_kor_to_eng의 alias (호환용)
 		return self.change_kor_to_eng(korStr)
 
 	def build_prompt_bundle(
+		# 프롬프트/positive/negative를 받아 LLM으로 PromptBundle 생성
 		self,
 		prompt: str,
 		positive_prompt: str | None = None,
@@ -278,6 +294,7 @@ class OpenAiJob:
 		if not normalized_prompt and not normalized_positive:
 			return PromptBundle(positive_prompt="", negative_prompt=normalized_negative or self._default_negative_prompt)
 
+		# LLM 호출이 필요한지 판단 (한글 포함/negative 없음 등)
 		needs_llm = (
 			not normalized_negative
 			or not normalized_positive
@@ -319,6 +336,7 @@ class OpenAiJob:
 		
 
 	def build_prompt_dual_prompt(
+		# Vision LLM 텍스트, 유저 프롬프트 등으로 positive/negative 프롬프트 동시 생성
 		self,
 		vlmtext: str,
 		user_prompt: str,
@@ -387,16 +405,189 @@ class OpenAiJob:
 				"positive_prompt": vlmtext or user_prompt,
 				"negative_prompt": self._default_negative_prompt,
 			}
+
+	def build_prompt_dual_prompt_core(
+		# Vision LLM 텍스트, 유저 프롬프트 등으로 positive/negative 프롬프트 동시 생성
+		self,
+		user_prompt: str,
+		positive_prompt: str = "",
+		negative_prompt: str = "",
+	) -> dict:
+		"""
+		Vision LLM 텍스트(vlmtext), 유저 프롬프트, 스타일, 컴포지션 등 4가지 텍스트를 받아
+		_translate_to_sd35_dual_prompt 프롬프트로 GPT에 전달하여 positive/negative 프롬프트를 생성합니다.
+		"""
+		# 입력 정규화
+		user_prompt = (user_prompt or "").strip()
+		positive_prompt = (positive_prompt or "").strip()
+		negative_prompt = (negative_prompt or "").strip()
 	
+		# GPT에 넘길 입력 포맷 구성
+		input_payload = {
+			"user_prompt": user_prompt,
+			"positive_prompt": positive_prompt,
+			"negative_prompt": negative_prompt,
+		}
+		# 프롬프트 메시지 생성
+		system_msg = self._translate_to_sd35_dual_prompt
+		# 입력을 보기 좋게 JSON이 아닌 텍스트로 전달
+		human_msg = (
+			f"[USER PROMPT]: {user_prompt}\n"
+			f"[POSITIVE PROMPT]: {positive_prompt}\n"
+			f"[NEGATIVE PROMPT]: {negative_prompt}\n"
+		)
+		try:
+			messages = [
+				SystemMessage(content=system_msg),
+				HumanMessage(content=human_msg),
+			]
+			result = self._invoke_llm(messages, trace_name="build_prompt_dual_prompt")
+			# 결과 파싱: "Positive: ...\nNegative: ..." 형태
+			content = self._message_content_to_text(result.content)
+			positive, negative = "", ""
+			for line in content.splitlines():
+				if line.strip().lower().startswith("positive:"):
+					positive = line.split(":", 1)[-1].strip()
+				elif line.strip().lower().startswith("negative:"):
+					negative = line.split(":", 1)[-1].strip()
+		
+			if not negative:
+				negative = self._default_negative_prompt
+			return {
+				"positive_prompt": positive,
+				"negative_prompt": negative,
+			}
+		except Exception as ex:
+			print(f"[build_prompt_dual_prompt Error] {type(ex).__name__}: {ex}")
+			return {
+				"positive_prompt": user_prompt,
+				"negative_prompt": self._default_negative_prompt,
+			}
+		
+
+	def build_prompt_dual_prompt_opt(
+		self,
+		opt: int,
+		user_prompt: str,
+		positive_prompt: str = "",
+		negative_prompt: str = "",
+	) -> dict:
+		"""
+		opt 옵션에 따라 user_prompt와 파라메터 긍정/부정 프롬프트를 조합하여 결과를 생성합니다.
+		opt=0:  user_prompt,positive_prompot, negative_prompt 도 다 넘기고 시스템 프롬프트도 넘겨서 처리
+		opt=1: user_prompt만 LLM에 전달, 파라메터 긍정/부정 + LLM 결과 조합
+		opt=2: user_prompt만 LLM에 전달(시스템 프롬프트 없이), 파라메터 긍정/부정 + LLM 결과 조합
+		"""
+		user_prompt = (user_prompt or "").strip()
+		positive_prompt = (positive_prompt or "").strip()
+		negative_prompt = (negative_prompt or "").strip()
+
+		user_prompt = self.changeKor2Eng(user_prompt)
+		positive_prompt = self.changeKor2Eng(positive_prompt)
+		negative_prompt = self.changeKor2Eng(negative_prompt)
+		
+		if opt == 0:
+			return self.build_prompt_dual_prompt_core(user_prompt=user_prompt, positive_prompt=positive_prompt, negative_prompt=negative_prompt)
+		elif opt == 1:
+			# 시스템 프롬프트 사용, user_prompt만 전달, 파라메터와 LLM 결과 조합
+			result = self._generate_positive_negative_with_system_prompt(user_prompt)
+			return {
+				"positive_prompt": self._concat_prompt(positive_prompt, result["positive_prompt"]),
+				"negative_prompt": self._concat_prompt(negative_prompt, result["negative_prompt"]),
+			}
+		elif opt == 2:
+			# 시스템 프롬프트 없이, user_prompt만 전달, 파라메터와 LLM 결과 조합
+			result = self._generate_positive_negative_no_system_prompt(user_prompt)
+			return {
+				"positive_prompt": self._concat_prompt(positive_prompt, result["positive_prompt"]),
+				"negative_prompt": self._concat_prompt(negative_prompt, result["negative_prompt"]),
+			}
+		else:
+			raise ValueError(f"Invalid opt value: {opt}")
+
+	def _generate_positive_negative_with_system_prompt(self, user_prompt: str) -> dict:
+		"""
+		시스템 프롬프트(self._translate_to_sd35_dual_prompt)와 함께 user_prompt만 LLM에 전달하여 긍정/부정 프롬프트 생성
+		"""
+		system_msg = self._translate_to_sd35_dual_prompt
+		human_msg = f"[USER PROMPT]: {user_prompt}"
+		try:
+			messages = [
+				SystemMessage(content=system_msg),
+				HumanMessage(content=human_msg),
+			]
+			result = self._invoke_llm(messages, trace_name="build_prompt_dual_prompt_opt_sys")
+			content = self._message_content_to_text(result.content)
+			positive, negative = "", ""
+			for line in content.splitlines():
+				if line.strip().lower().startswith("positive:"):
+					positive = line.split(":", 1)[-1].strip()
+				elif line.strip().lower().startswith("negative:"):
+					negative = line.split(":", 1)[-1].strip()
+			if not positive:
+				positive = user_prompt
+			if not negative:
+				negative = self._default_negative_prompt
+			return {
+				"positive_prompt": positive,
+				"negative_prompt": negative,
+			}
+		except Exception as ex:
+			print(f"[_generate_positive_negative_with_system_prompt Error] {type(ex).__name__}: {ex}")
+			return {
+				"positive_prompt": user_prompt,
+				"negative_prompt": self._default_negative_prompt,
+			}
+
+	def _generate_positive_negative_no_system_prompt(self, user_prompt: str) -> dict:
+		"""
+		시스템 프롬프트 없이 user_prompt만 LLM에 전달하여 긍정/부정 프롬프트 생성
+		"""
+		human_msg = f"{user_prompt}"
+		try:
+			messages = [
+				HumanMessage(content=human_msg),
+			]
+			result = self._invoke_llm(messages, trace_name="build_prompt_dual_prompt_opt_no_sys")
+			content = self._message_content_to_text(result.content)
+			positive, negative = "", ""
+			for line in content.splitlines():
+				if line.strip().lower().startswith("positive:"):
+					positive = line.split(":", 1)[-1].strip()
+				elif line.strip().lower().startswith("negative:"):
+					negative = line.split(":", 1)[-1].strip()
+			if not positive:
+				positive = user_prompt
+			if not negative:
+				negative = self._default_negative_prompt
+			return {
+				"positive_prompt": positive,
+				"negative_prompt": negative,
+			}
+		except Exception as ex:
+			print(f"[_generate_positive_negative_no_system_prompt Error] {type(ex).__name__}: {ex}")
+			return {
+				"positive_prompt": user_prompt,
+				"negative_prompt": self._default_negative_prompt,
+			}
+
+	def _concat_prompt(self, param_prompt: str, llm_prompt: str) -> str:
+		"""
+		파라메터 프롬프트와 LLM 생성 프롬프트를 적절히 합침 (둘 다 있으면 콤마로 연결)
+		"""
+		if param_prompt and llm_prompt:
+			return f"{param_prompt}, {llm_prompt}"
+		return param_prompt or llm_prompt
 
 	def build_ad_copy(
+		# 광고 문구 생성 (LLM 활용, tone/타겟/variant 개수 지원)
 		self,
 		input_text: str,
 		tone: str | None = None,
 		target_audience: str | None = None,
 		count: int = 3,
 	) -> AdCopyBundle:
-		normalized_text = (input_text or "").strip()
+		normalized_text = (input_text or "").strip()  # 입력 정규화
 		normalized_tone = (tone or "").strip()
 		normalized_target = (target_audience or "").strip()
 		variant_count = count if count > 0 else 3
@@ -433,6 +624,7 @@ class OpenAiJob:
 			return AdCopyBundle(main_copy=fallback_variants[0], variants=fallback_variants[:variant_count])
 
 	def build_background_prompt_bundle(
+		# 배경 전용 프롬프트 번들 생성 (LLM 활용, 실패 시 fallback)
 		self,
 		caption_text: str,
 		user_prompt: str | None = None,

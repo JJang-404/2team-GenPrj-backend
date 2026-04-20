@@ -1,6 +1,7 @@
-## 11. VLM+GPT+ComfyUI 통합 이미지 생성 API
 
-### 11-1. 엔드포인트
+## 1. VLM+GPT+ComfyUI 통합 이미지 생성 API
+
+### 1-1. 엔드포인트
 
 ```
 POST /addhelper/model/generate_vlm_gpt_image
@@ -14,7 +15,7 @@ POST /addhelper/model/generate_vlm_gpt_image
 2. 해당 텍스트와 입력 프롬프트들을 GPT(OpenAI)로 최적화
 3. ComfyUI로 이미지를 생성하여 반환합니다.
 
-### 11-2. 요청 바디 예시
+### 1-2. 요청 바디 예시
 
 ```json
 {
@@ -25,7 +26,7 @@ POST /addhelper/model/generate_vlm_gpt_image
 }
 ```
 
-### 11-3. 응답 예시
+### 1-3. 응답 예시
 
 ```json
 {
@@ -47,7 +48,7 @@ POST /addhelper/model/generate_vlm_gpt_image
 }
 ```
 
-### 11-4. React fetch 예시
+### 1-4. React fetch 예시
 
 ```tsㅔㅛ
 type VlmGptImagePayload = {
@@ -182,7 +183,72 @@ export async function runImageJob<TPayload>(
 
 ---
 
-## 6. 파일 → base64 변환
+## 2. ComfyUI ChangeImage (opt) 비동기 API
+
+### 2-1. 잡 생성
+- **POST** `/addhelper/model/changeimagecomfyui_opt/jobs`
+- 요청: (ChangeImageComfyUiRequest_opt)
+```json
+{
+  "opt": 0,
+  "prompt": "광고용 커피 사진 스타일로 변환",
+  "positive_prompt": "high detail, commercial, coffee, 8k",
+  "negative_prompt": "blurry, low quality",
+  "image_base64": "data:image/png;base64,...",
+  "strength": 0.45
+}
+```
+- 응답: `{ "job_id": "...", "status": "queued" }`
+
+### 2-2. 잡 상태 조회
+- **GET** `/addhelper/model/changeimagecomfyui_opt/jobs/{job_id}`
+- 응답: `{ "job_id": "...", "status": "queued|done|failed", "error": "..." }`
+
+### 2-3. 잡 결과 조회
+- **GET** `/addhelper/model/changeimagecomfyui_opt/jobs/{job_id}/result`
+- 성공 시:
+```json
+{
+  "positive_prompt": "...",
+  "negative_prompt": "...",
+  "image_base64": "...",
+  "content_type": "image/png"
+}
+```
+- 실패 시:
+```json
+{
+  "error": "오류 메시지"
+}
+```
+
+### 2-4. React 연동 예시
+```ts
+export async function createChangeImageComfyuiOptJob(payload) {
+  const res = await fetch(`${API_BASE_URL}/addhelper/model/changeimagecomfyui_opt/jobs`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const job = await res.json();
+  return job.job_id;
+}
+
+export async function getChangeImageComfyuiOptJobStatus(job_id) {
+  const res = await fetch(`${API_BASE_URL}/addhelper/model/changeimagecomfyui_opt/jobs/${job_id}`);
+  return await res.json();
+}
+
+export async function getChangeImageComfyuiOptJobResult(job_id) {
+  const res = await fetch(`${API_BASE_URL}/addhelper/model/changeimagecomfyui_opt/jobs/${job_id}/result`);
+  if (!res.ok) throw new Error('결과 조회 실패');
+  return await res.json();
+}
+```
+
+---
+
+## 7. 파일 → base64 변환
 
 ```ts
 export function fileToBase64(file: File): Promise<string> {
@@ -204,7 +270,7 @@ export function fileToBase64(file: File): Promise<string> {
 
 ---
 
-## 7. 에러 처리
+## 8. 에러 처리
 
 ```ts
 async function parseJsonError(response: Response, fallbackMessage: string) {
@@ -219,7 +285,7 @@ async function parseJsonError(response: Response, fallbackMessage: string) {
 
 ---
 
-## 8. 참고 사항
+## 9. 참고 사항
 
 - 실제 서비스에서는 반드시 비동기(jobs) API 사용 권장
 - 긴 작업을 동기 API로 호출 시 504 등 오류 발생 가능
