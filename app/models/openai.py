@@ -259,10 +259,23 @@ class OpenAiJob:
 
 		return "\n".join(part.strip() for part in parts if part).strip()
 
+	@staticmethod
+	def _contains_hangul(text: str) -> bool:
+		# 한글 음절(AC00-D7A3) / 자모(1100-11FF) / 호환 자모(3130-318F) 포함 여부
+		for ch in text:
+			code = ord(ch)
+			if 0xAC00 <= code <= 0xD7A3 or 0x1100 <= code <= 0x11FF or 0x3130 <= code <= 0x318F:
+				return True
+		return False
+
 	def change_kor_to_eng(self, kor_str: str) -> str:
 		# 한글 프롬프트를 영어로 번역 (LLM 사용)
+		# 한글이 포함되어 있지 않으면 그대로 반환해 SD 가중치 구문 `(foo:1.3)` 등을
+		# LLM 재작성으로 잃지 않도록 한다.
 		if not kor_str or not kor_str.strip():
 			return ""
+		if not self._contains_hangul(kor_str):
+			return kor_str
 
 		try:
 			messages = [

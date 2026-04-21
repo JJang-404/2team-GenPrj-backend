@@ -10,12 +10,12 @@
   },
   "7": {
     "inputs": {
-      "seed": 488684581235404,
-      "steps": 20,
-      "cfg": 4.5,
+      "seed": 660765690304600,
+      "steps": 25,
+      "cfg": 10,
       "sampler_name": "euler",
       "scheduler": "sgm_uniform",
-      "denoise": 1,
+      "denoise": 0.9,
       "model": [
         "20",
         0
@@ -40,7 +40,7 @@
   },
   "8": {
     "inputs": {
-      "text": "A professional cafe interior poster background , high quality, cinematic lighting",
+      "text": "(masterpiece:1.3), (best quality:1.3), (professional advertising photography:1.2), (highly polished luxury marble surface with subtle reflections:1.4), (cinematic studio lighting:1.3).\n(The entire scene is dynamically color-graded based on the dominant hues of the source image:1.5).\nA pristine, tight-frame bust-shot of an exclusive product pedestal. In the foreground, a flat, exquisite texture surface is shown. \nThe entire background is (completely deconstructed into a soft, ethereal, and hazy wash of ambient light:1.6). \nNo distinct shapes, only (smooth color gradients and a dreamlike atmospheric glow extracted from the source image:1.5). \nExtremely shallow depth of field, 105mm portrait lens perspective, 8k, flawless render.",
       "clip": [
         "21",
         0
@@ -53,7 +53,7 @@
   },
   "9": {
     "inputs": {
-      "text": "text, watermark, blurry, person",
+      "text": "(pillars:2.0), (arches:2.0), (building:2.0), (room:2.0), (hall:2.0), (large space:2.0), (distant view:2.0), (wide shot:2.0), (massive hall:1.8), (expansive background:1.8), (objects in background:1.7), cup, glass, coffee, beverage, drink, bottle, straw, liquid, text, logo, watermark, low quality.",
       "clip": [
         "21",
         0
@@ -79,7 +79,7 @@
   },
   "14": {
     "inputs": {
-      "image": "coffee.png"
+      "image": "말차_1.jpg"
     },
     "class_type": "LoadImage",
     "_meta": {
@@ -89,7 +89,7 @@
   "15": {
     "inputs": {
       "pixels": [
-        "14",
+        "23",
         0
       ],
       "vae": [
@@ -149,6 +149,45 @@
     "class_type": "TripleCLIPLoader",
     "_meta": {
       "title": "삼중 CLIP 로드"
+    }
+  },
+  "22": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "width": 8,
+      "height": 8,
+      "crop": "disabled",
+      "image": [
+        "14",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "이미지 확대"
+    }
+  },
+  "23": {
+    "inputs": {
+      "upscale_method": "nearest-exact",
+      "width": 1024,
+      "height": 1024,
+      "crop": "disabled",
+      "image": [
+        "22",
+        0
+      ]
+    },
+    "class_type": "ImageScale",
+    "_meta": {
+      "title": "이미지 확대"
+    }
+  },
+  "24": {
+    "inputs": {},
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "이미지 미리보기"
     }
   }
 }
