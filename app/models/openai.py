@@ -487,24 +487,33 @@ class OpenAiJob:
 		negative_prompt = self.changeKor2Eng(negative_prompt)
 		
 		if opt == 0:
-			return self.build_prompt_dual_prompt_core(user_prompt=user_prompt, positive_prompt=positive_prompt, negative_prompt=negative_prompt)
+			resultprint =  self.build_prompt_dual_prompt_core(user_prompt=user_prompt, positive_prompt=positive_prompt, negative_prompt=negative_prompt)
+			print("=================================================================================================")
+			print(resultprint)
+			print("=================================================================================================")
+			return resultprint
 		elif opt == 1:
 			# 시스템 프롬프트 사용, user_prompt만 전달, 파라메터와 LLM 결과 조합
 			result = self._generate_positive_negative_with_system_prompt(user_prompt)
 			print("=================================================================================================")
-			print(result)
-			print("=================================================================================================")
-			return {
+			resultprint = {
 				"positive_prompt": self._concat_prompt(positive_prompt, result["positive_prompt"]),
 				"negative_prompt": self._concat_prompt(negative_prompt, result["negative_prompt"]),
 			}
+			print(resultprint)
+			print("=================================================================================================")
+			return resultprint
 		elif opt == 2:
 			# 시스템 프롬프트 없이, user_prompt만 전달, 파라메터와 LLM 결과 조합
 			result = self._generate_positive_negative_no_system_prompt(user_prompt)
-			return {
+			print("=================================================================================================")
+			resultprint = {
 				"positive_prompt": self._concat_prompt(positive_prompt, result["positive_prompt"]),
 				"negative_prompt": self._concat_prompt(negative_prompt, result["negative_prompt"]),
 			}
+			print(resultprint)
+			print("=================================================================================================")
+			return resultprint
 		else:
 			raise ValueError(f"Invalid opt value: {opt}")
 
