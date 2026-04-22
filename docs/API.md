@@ -1,3 +1,90 @@
+## 11. 광고 프롬프트(Dual Prompt) 비동기 API 사용법
+
+### 11-1. 잡 생성
+- **POST** `/addhelper/adver/makedaulprompt/jobs`
+- 요청: (DualPromptRequest)
+
+#### 요청 바디 예시
+```json
+{
+	"opt": 0,
+	"user_prompt": "광고 문구를 만들어줘",
+	"positive_prompt": "밝고 긍정적인 느낌",
+	"negative_prompt": "부정적, 우울함",
+	"input_text": "신제품 커피 출시"
+}
+```
+- 응답: `{ "job_id": "...", "status": "queued" }`
+
+### 11-2. 잡 상태 조회
+- **GET** `/addhelper/adver/makedaulprompt/jobs/{job_id}`
+- 응답: `{ "job_id": "...", "status": "queued|done|failed", "error": "..." }`
+
+### 11-3. 잡 결과 조회
+- **GET** `/addhelper/adver/makedaulprompt/jobs/{job_id}/result`
+- 성공 시:
+```json
+{
+	"statusCode": 200,
+	"statusMsg": "OK",
+	"datalist": [],
+	"data": {
+		"positive_prompt": "...",
+		"negative_prompt": "..."
+	}
+}
+```
+- 실패 시:
+```json
+{
+	"statusCode": 100,
+	"statusMsg": "오류 원인",
+	"datalist": [],
+	"data": null
+}
+```
+
+### 11-4. React 연동 예시
+```ts
+// DualPromptRequest 타입 예시
+type DualPromptRequest = {
+	opt: number;
+	user_prompt?: string;
+	positive_prompt?: string;
+	negative_prompt?: string;
+	input_text: string;
+};
+
+// 잡 생성
+export async function createMakedaulPromptJob(payload: DualPromptRequest) {
+	const res = await fetch(`${API_BASE_URL}/addhelper/adver/makedaulprompt/jobs`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(payload),
+	});
+	const job = await res.json();
+	return job.job_id;
+}
+
+// 잡 상태 조회
+export async function getMakedaulPromptJobStatus(job_id: string) {
+	const res = await fetch(`${API_BASE_URL}/addhelper/adver/makedaulprompt/jobs/${job_id}`);
+	return await res.json();
+}
+
+// 잡 결과 조회
+export async function getMakedaulPromptJobResult(job_id: string) {
+	const res = await fetch(`${API_BASE_URL}/addhelper/adver/makedaulprompt/jobs/${job_id}/result`);
+	if (!res.ok) throw new Error('결과 조회 실패');
+	return await res.json();
+}
+```
+
+### 11-5. 비동기 잡 처리 흐름
+1. `POST /addhelper/adver/makedaulprompt/jobs`로 job_id를 받는다.
+2. `GET /addhelper/adver/makedaulprompt/jobs/{job_id}`로 상태를 폴링한다.
+3. `status === 'done'`이면 `GET /addhelper/adver/makedaulprompt/jobs/{job_id}/result`로 결과를 받는다.
+4. `status === 'failed'`면 error 메시지를 확인한다.
 
 ## 1. VLM+GPT+ComfyUI 통합 이미지 생성 API
 
@@ -185,17 +272,27 @@ export async function runImageJob<TPayload>(
 
 ## 2. ComfyUI ChangeImage (opt) 비동기 API
 
+
 ### 2-1. 잡 생성
 - **POST** `/addhelper/model/changeimagecomfyui_opt/jobs`
 - 요청: (ChangeImageComfyUiRequest_opt)
+
+#### opt 옵션별 동작
+"""
+opt 옵션에 따라 user_prompt와 파라메터 긍정/부정 프롬프트를 조합하여 결과를 생성합니다.
+opt=0:  user_prompt, positive_prompt, negative_prompt 모두 LLM에 전달, 시스템 프롬프트도 함께 사용
+opt=1: user_prompt만 LLM에 전달, 파라메터 긍정/부정 + LLM 결과 조합
+opt=2: user_prompt만 LLM에 전달(시스템 프롬프트 없이), 파라메터 긍정/부정 + LLM 결과 조합
+"""
+
 ```json
 {
-  "opt": 0,
-  "prompt": "광고용 커피 사진 스타일로 변환",
-  "positive_prompt": "high detail, commercial, coffee, 8k",
-  "negative_prompt": "blurry, low quality",
-  "image_base64": "data:image/png;base64,...",
-  "strength": 0.45
+	"opt": 0,
+	"prompt": "광고용 커피 사진 스타일로 변환",
+	"positive_prompt": "high detail, commercial, coffee, 8k",
+	"negative_prompt": "blurry, low quality",
+	"image_base64": "data:image/png;base64,...",
+	"strength": 0.45
 }
 ```
 - 응답: `{ "job_id": "...", "status": "queued" }`

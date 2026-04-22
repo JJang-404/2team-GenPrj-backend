@@ -276,9 +276,12 @@ class OpenAiJob:
 			print(f"[change_kor_to_eng Error] {type(ex).__name__}: {ex}")
 			return kor_str
 
-	def changeKor2Eng(self, korStr: str) -> str:
-		# change_kor_to_eng의 alias (호환용)
-		return self.change_kor_to_eng(korStr)
+	def change_kor2eng(self, kor_str: str) -> str:
+		"""
+		change_kor_to_eng의 alias (호환용)
+		기존 camelCase 네이밍을 snake_case로 변경 (컨벤션 준수)
+		"""
+		return self.change_kor_to_eng(kor_str)
 
 	def build_prompt_bundle(
 		# 프롬프트/positive/negative를 받아 LLM으로 PromptBundle 생성
@@ -482,9 +485,9 @@ class OpenAiJob:
 		positive_prompt = (positive_prompt or "").strip()
 		negative_prompt = (negative_prompt or "").strip()
 
-		user_prompt = self.changeKor2Eng(user_prompt)
-		positive_prompt = self.changeKor2Eng(positive_prompt)
-		negative_prompt = self.changeKor2Eng(negative_prompt)
+		user_prompt = self.change_kor2eng(user_prompt)
+		positive_prompt = self.change_kor2eng(positive_prompt)
+		negative_prompt = self.change_kor2eng(negative_prompt)
 		
 		if opt == 0:
 			resultprint =  self.build_prompt_dual_prompt_core(user_prompt=user_prompt, positive_prompt=positive_prompt, negative_prompt=negative_prompt)

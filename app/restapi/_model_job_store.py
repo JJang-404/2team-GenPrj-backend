@@ -13,6 +13,7 @@ _ASYNC_JOB_STORES: dict[str, dict[str, dict[str, Any]]] = {
     "changeimagecomfyui": {},
     "changeimagecomfyui_opt": {},
     "makebgimagecomfyui": {},
+    "makedaulprompt": {},
 }
 _ASYNC_JOB_STORE_LOCK = threading.Lock()
 
