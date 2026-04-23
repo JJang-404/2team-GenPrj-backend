@@ -1,0 +1,2 @@
+positive_prompt: 카툰풍으로 만들어 주세요., 고급스러운 카페 광고 포스터
+negative_prompt: 사람,문자, low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, cropped, watermark, text, logo, duplicate, oversaturated

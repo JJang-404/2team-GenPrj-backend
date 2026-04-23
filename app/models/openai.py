@@ -142,9 +142,10 @@ class OpenAiJob:
 			"low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, "
 			"cropped, watermark, text, logo, duplicate, oversaturated"
 		)
-		self._langfuse_client = self._build_langfuse_client(env_map)
 		self._langfuse_handler = self._build_langfuse_handler(env_map)
 		self._llm = ChatOpenAI(model=model, temperature=0, api_key=SecretStr(self._api_key))
+		from app.models.langfuse import get_langfuse_singleton
+		self._langfuse_singleton = get_langfuse_singleton()
 
 	def _read_env_map(self) -> dict[str, str]:
 		# .security/.env 파일에서 환경 변수 맵을 읽어옴
@@ -162,35 +163,16 @@ class OpenAiJob:
 			env_map[key.strip()] = value.strip().strip('"').strip("'")
 		return env_map
 
-	def _build_langfuse_client(self, env_map: dict[str, str]) -> Any | None:
-		# Langfuse 클라이언트 동적 생성 (없으면 None)
-		public_key = (env_map.get("LANGFUSE_PUBLIC_KEY") or "").strip()
-		secret_key = (env_map.get("LANGFUSE_SECRET_KEY") or "").strip()
-		base_url = (env_map.get("LANGFUSE_BASE_URL") or "").strip()
-		if not (public_key and secret_key and base_url):
-			return None
-
-		try:
-			langfuse_mod = importlib.import_module("langfuse")
-			langfuse_cls = getattr(langfuse_mod, "Langfuse", None)
-			if langfuse_cls is None:
-				return None
-
-			return langfuse_cls(
-				public_key=public_key,
-				secret_key=secret_key,
-				host=base_url,
-			)
-		except Exception as ex:
-			print(f"[Langfuse] client 초기화 실패: {type(ex).__name__}: {ex}")
-			return None
+	# _build_langfuse_client 제거: 싱글턴만 사용
 
 	def _invoke_llm(self, messages: list[SystemMessage | HumanMessage], trace_name: str):
-		# LLM 호출 래퍼 (Langfuse trace 지원)
+		# LLM 호출 래퍼 (LangfuseSingleton만 사용)
+		import time
 		if self._langfuse_handler is None:
 			return self._llm.invoke(messages)
 
-		return self._llm.invoke(
+		start_time = time.time()
+		result = self._llm.invoke(
 			messages,
 			config={
 				"callbacks": [self._langfuse_handler],
@@ -198,6 +180,13 @@ class OpenAiJob:
 				"metadata": {"model": self._model},
 			},
 		)
+		elapsed = time.time() - start_time
+		self._langfuse_singleton.record_duration(
+			trace_name="openai_processing_time",
+			elapsed=elapsed,
+			metadata={"model": self._model, "trace_name": trace_name}
+		)
+		return result
 
 	def _contains_korean(self, text: str) -> bool:
 		# 문자열에 한글 포함 여부 확인
@@ -560,7 +549,8 @@ class OpenAiJob:
 		"""
 		human_msg = f"{user_prompt}"
 		try:
-			messages = [
+			from collections.abc import Sequence
+			messages: Sequence[SystemMessage | HumanMessage] = [
 				HumanMessage(content=human_msg),
 			]
 			result = self._invoke_llm(messages, trace_name="build_prompt_dual_prompt_opt_no_sys")

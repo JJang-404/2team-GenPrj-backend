@@ -176,14 +176,16 @@ class ComfyUIClient:
         outputs = history_entry.get("outputs", {})
         for node_output in outputs.values():
             for img_info in node_output.get("images", []):
-                params = {
-                    "filename": img_info["filename"],
-                    "subfolder": img_info.get("subfolder", ""),
-                    "type": img_info.get("type", "output"),
-                }
-                response = requests.get(f"{self.base_url}/view", params=params, timeout=30)
-                response.raise_for_status()
-                images.append(response.content)
+                # type이 'output'인 경우만(즉, output 디렉토리의 최종 생성 이미지만) 반환
+                if img_info.get("type", "output") == "output":
+                    params = {
+                        "filename": img_info["filename"],
+                        "subfolder": img_info.get("subfolder", ""),
+                        "type": img_info.get("type", "output"),
+                    }
+                    response = requests.get(f"{self.base_url}/view", params=params, timeout=30)
+                    response.raise_for_status()
+                    images.append(response.content)
         return images
 
     def upload_image(self, image_bytes: bytes, filename: str = "", image_type: str = "input") -> dict:
@@ -226,14 +228,38 @@ class ComfyUIClient:
         strength: float = 0.45,
         image_name: str = "",
         flow_path: Path | None = None,
-    ) -> list[bytes]:
+        return_result_image_name: bool = False,
+    ) -> tuple[list[bytes], str | None]:
+        import time
+        from app.models.langfuse import get_langfuse_singleton
+        langfuse = get_langfuse_singleton()
+        start_time = time.time()
         upload_result = self.upload_image(image_bytes=image_bytes, filename=image_name)
         prompt_data = self.load_prompt_data(flow_path or CHANGE_IMAGE_JSON_PATH)
         self.apply_prompt_text(prompt_data, positive_text, negative_text)
         self.apply_change_image(prompt_data, image_name=str(upload_result["name"]), strength=strength)
         prompt_id = self.queue_prompt(prompt_data)
         history_entry = self.wait_for_completion(prompt_id)
-        return self.fetch_output_images(history_entry)
+        images = self.fetch_output_images(history_entry)
+        # 결과 이미지명 추출 (가능하면)
+        result_image_name = None
+        outputs = history_entry.get("outputs", {})
+        for node_output in outputs.values():
+            for img_info in node_output.get("images", []):
+                if img_info.get("type", "output") == "output":
+                    result_image_name = img_info.get("filename")
+                    break
+            if result_image_name:
+                break
+        elapsed = time.time() - start_time
+        langfuse.record_duration(
+            trace_name="comfyui_processing_time",
+            elapsed=elapsed,
+            metadata={"model": "comfyui"}
+        )
+        if return_result_image_name:
+            return images, result_image_name
+        return images, None
 
     def florence_vlm(self, image_bytes: bytes, image_name: str = "", text_input: str = "", flow_path: Optional[Path] = None) -> str:
         """

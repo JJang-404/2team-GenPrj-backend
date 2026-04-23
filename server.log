@@ -1,0 +1,552 @@
+nohup: ignoring input
+INFO:     Started server process [91286]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+(1.0)genPrj Backend Server is running on http://localhost:8000
+INFO:     172.18.0.1:58650 - "GET /addhelper/model/test HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52540 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52544 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:39992 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44638 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:48790 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:37334 - "POST /addhelper/model/makebgimagecomfyui/jobs HTTP/1.1" 200 OK
+[Gemma4OllamaService] config loaded backend_ini_path=/project/2team-GenPrj-backend/app/common/backend.ini, model_name=gemma4:latest, ollama_url=https://gen-proj.duckdns.org/ollama/, wait_time=600
+[Gemma4OllamaService] initialized model_name=gemma4:latest, ollama_url=https://gen-proj.duckdns.org/ollama, wait_time=600
+[Gemma4OllamaService] generate_background_byimage start 
+[Gemma4OllamaService] calling ollama generate url=https://gen-proj.duckdns.org/ollama/api/generate, model=gemma4:latest
+INFO:     172.18.0.1:37338 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54506 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54508 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54524 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54530 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54540 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44302 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44306 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44312 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44322 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44334 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44348 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56170 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56178 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56188 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56196 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56206 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59668 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59678 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59694 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59700 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:59714 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:40880 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:40894 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:40910 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:40918 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:40934 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:43280 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:43294 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:43296 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:43300 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:43304 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51624 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51628 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+[Gemma4OllamaService] ollama response received body_len=2926
+INFO:     172.18.0.1:51644 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51660 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51666 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36938 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36954 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36962 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36964 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+ComfyUI용 positive_prompt: tall glass of iced coffee mid-splash, dark saturated brown liquid, intricate droplets and foam, hyper-realistic commercial photography, photorealistic, appetizing, cheerful, playful, vibrant, centered tight product close-up, seamless white background, high-speed liquid dynamics, frozen motion, studio high-contrast cinematic lighting, sharp glossy reflections, rim highlights, deep brown with caramel highlights, high saturation, extreme detail, ultra-sharp, 8k, crisp focus, realistic glass refractions, no props
+ComfyUI용 negative_prompt: low quality, worst quality, lowres, blurry, out of focus, text, watermark, logo, signature, jpeg artifacts, compression artifacts, noise, grain, deformed, mutated, distorted, extra limbs, extra fingers, faces, people, hands, props, cups, bottles, food, cluttered or busy background, frames, borders, tilted/skewed perspective, lens flare, chromatic aberration, overexposed, underexposed, duplicate subjects, unnatural colors, bad anatomy, artifacts, low contrast, soft focus
+INFO:     172.18.0.1:36980 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47456 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47470 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47484 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47488 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47498 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54832 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54838 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54850 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54864 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54872 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33612 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33622 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33634 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33644 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33648 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39318 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39320 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39322 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39324 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39340 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36128 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36144 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36148 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36162 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36178 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56768 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56774 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56782 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56798 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56812 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56556 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56570 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56578 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56580 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56584 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56590 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35408 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35412 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35428 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35444 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35456 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35472 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:34940 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:34944 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c HTTP/1.1" 200 OK
+INFO:     172.18.0.1:34952 - "GET /addhelper/model/makebgimagecomfyui/jobs/36f5487d-a33f-4a73-a371-d49fbbf52c9c/result HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33920 - "POST /addhelper/adver/makedaulprompt/jobs HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33922 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33930 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33942 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33948 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33960 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53430 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53434 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53436 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53444 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53458 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54126 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54142 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54156 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54160 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54170 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36114 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36122 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36124 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36140 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36152 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55638 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55644 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55660 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+=================================================================================================
+{'positive_prompt': 'exclusive product pedestal bust-shot, tight-frame foreground, flat exquisite polished marble surface, masterpiece, best quality, professional advertising photography, highly polished luxury marble, extremely shallow depth of field, 105mm portrait lens, 8k, flawless render, cinematic studio lighting, dynamic color grading from dominant hues, background deconstructed into soft ethereal hazy wash, smooth color gradients, dreamlike atmospheric glow, no distinct shapes, subtle reflections, lush green mountain landscape, verdant forest and rolling hills, photorealistic, cinematic, ultra-detailed, wide-angle panoramic composition, foreground wildflowers, midground winding river, distant peaks, golden-hour soft light, atmospheric haze, vibrant greens, clear blue sky, misty sun rays, birds, high-resolution', 'negative_prompt': 'massive interior hall with soaring pillars and classical arches, grand building interior, cinematic photorealism, wide-angle panoramic distant view, symmetrical composition, expansive background, small cups and glasses, coffee cups and bottles in background, soft natural light, warm muted tones, high detail, no text, no logo, no watermark, no low quality, low quality, blurry, distorted, deformed, bad anatomy, bad hands, extra fingers, cropped, watermark, text, logo, duplicate, oversaturated'}
+=================================================================================================
+INFO:     172.18.0.1:55670 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55684 - "GET /addhelper/adver/makedaulprompt/jobs/c2f4d358-2674-4a52-aaec-8618d9f2b15a/result HTTP/1.1" 200 OK
+INFO:     172.18.0.1:49786 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:57754 - "POST /addhelper/model/makebgimagecomfyui/jobs HTTP/1.1" 200 OK
+[Gemma4OllamaService] config loaded backend_ini_path=/project/2team-GenPrj-backend/app/common/backend.ini, model_name=gemma4:latest, ollama_url=https://gen-proj.duckdns.org/ollama/, wait_time=600
+[Gemma4OllamaService] initialized model_name=gemma4:latest, ollama_url=https://gen-proj.duckdns.org/ollama, wait_time=600
+[Gemma4OllamaService] generate_background_byimage start 
+[Gemma4OllamaService] calling ollama generate url=https://gen-proj.duckdns.org/ollama/api/generate, model=gemma4:latest
+INFO:     172.18.0.1:57758 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:57762 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:57772 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:42752 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:42756 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:42760 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:42774 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:42776 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:42792 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51296 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51304 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51306 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51318 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51332 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51340 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56724 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56738 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56748 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56764 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:56776 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35316 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35328 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35338 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35346 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35350 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45798 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45812 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45816 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45820 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45836 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:57580 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+[Gemma4OllamaService] ollama response received body_len=3189
+INFO:     172.18.0.1:57586 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:57588 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:57592 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:57596 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:60504 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:60518 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:60522 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:60530 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+ComfyUI용 positive_prompt: cheerful advertising poster background for iced cola splash, vibrant abstract gradient backdrop, minimal clean seamless studio style, centered composition with ample negative space, eye-level medium shot, high-key studio lighting with crisp rim highlights and soft ambient glow, warm amber and cyan complementary color grading, smooth glossy sheen, subtle bokeh and light confetti bubbles, diagonal motion streaks, photorealistic, commercial, ultra-detailed, 8k
+ComfyUI용 negative_prompt: low quality, worst quality, lowres, low resolution, text, watermark, logo, signature, visible people, faces, hands, bodies, recognizable products (cups, bottles, food), cluttered or busy background, distinct shapes, frames or borders, typography, props, extra limbs, malformed, deformed, mutated, ugly, blurry, out of focus, motion blur, noise, grain, jpeg artifacts, compression artifacts, chromatic aberration, overexposed, underexposed, lens flare, duplicate subjects, tilted/skewed perspective
+INFO:     172.18.0.1:60544 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50670 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50682 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50688 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50694 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50704 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44712 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44728 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44730 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44734 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44736 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51008 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51024 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51028 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51032 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51046 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:41174 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:41184 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:41190 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:41204 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:41220 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52788 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52792 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52796 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52804 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52816 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39296 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39310 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39318 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39324 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39328 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36056 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36060 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36076 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36086 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36102 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51806 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51814 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51826 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51842 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51844 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45670 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45678 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45694 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45698 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338 HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45712 - "GET /addhelper/model/makebgimagecomfyui/jobs/5426f303-bb2e-4a7a-a82f-c47e13207338/result HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54028 - "GET /SDK/webLanguage HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:38394 - "GET /admin/config.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:43144 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:50742 - "GET /wp-json/oembed/1.0/proxy HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50750 - "GET /ueditor/php/controller.php?action=catchimage&source[]=http://127.0.0.1:360043/?1.png HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50756 - "GET /ueditor/jsp/controller.jsp?action=catchimage&source[]=http://127.0.0.1:582143/?1.png HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59080 - "GET /wp-content/plugins/jetpack/readme.txt HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:54632 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:38652 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:38654 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39146 - "GET /dns-query?dns=jVgBAAABAAAAAAAAATEEb2RucwFtCmRuc21lYXN1cmUDdG9wAAABAAE HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39152 - "POST /dns-query HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39160 - "GET /dns-query?name=1.odns.m.dnsmeasure.top&type=A HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39174 - "GET /dns-query?dns=gtkBAAABAAAAAAAAATEEb2RucwFtCmRuc21lYXN1cmUDdG9wAAABAAE HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39186 - "POST /dns-query HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39196 - "GET /dns-query?name=1.odns.m.dnsmeasure.top&type=A HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39200 - "GET /query?dns=BQYBAAABAAAAAAAAATEEb2RucwFtCmRuc21lYXN1cmUDdG9wAAABAAE HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39202 - "POST /query HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39204 - "GET /query?name=1.odns.m.dnsmeasure.top&type=A HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39214 - "GET /query?dns=_gwBAAABAAAAAAAAATEEb2RucwFtCmRuc21lYXN1cmUDdG9wAAABAAE HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39228 - "POST /query HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39234 - "GET /query?name=1.odns.m.dnsmeasure.top&type=A HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39246 - "GET /resolve?dns=PscBAAABAAAAAAAAATEEb2RucwFtCmRuc21lYXN1cmUDdG9wAAABAAE HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39260 - "POST /resolve HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39274 - "GET /resolve?name=1.odns.m.dnsmeasure.top&type=A HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39278 - "GET /resolve?dns=9U0BAAABAAAAAAAAATEEb2RucwFtCmRuc21lYXN1cmUDdG9wAAABAAE HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39282 - "POST /resolve HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39296 - "GET /resolve?name=1.odns.m.dnsmeasure.top&type=A HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:39300 - "GET /?dns=X6MBAAABAAAAAAAAATEEb2RucwFtCmRuc21lYXN1cmUDdG9wAAABAAE HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39308 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:39318 - "GET /?name=1.odns.m.dnsmeasure.top&type=A HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39320 - "GET /?dns=zLYBAAABAAAAAAAAATEEb2RucwFtCmRuc21lYXN1cmUDdG9wAAABAAE HTTP/1.1" 200 OK
+INFO:     172.18.0.1:39324 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:39326 - "GET /?name=1.odns.m.dnsmeasure.top&type=A HTTP/1.1" 200 OK
+INFO:     172.18.0.1:58348 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:46480 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:53964 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55468 - "GET /webui/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51270 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:54608 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:55772 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52354 - "GET /geoserver/web/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:56570 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:48518 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:55800 - "GET /Dr0v HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:53468 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:56622 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50926 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50938 - "GET /secrets.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50954 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50958 - "GET /.aws/credentials HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50974 - "GET /.env.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50970 - "GET /.openai/config.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50976 - "GET /.env.production HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50980 - "GET /app/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50994 - "GET /.env.backup HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51004 - "GET /api/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51020 - "GET /.env.bak HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51028 - "GET /.anthropic/config.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51040 - "GET /serviceAccountKey.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51044 - "GET /backend/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51058 - "GET /credentials.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51068 - "GET /.cursor/mcp.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51070 - "GET /laravel/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51086 - "GET /config.json HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51100 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52982 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:54174 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54178 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45266 - "GET /.well-known/security.txt HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45270 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45276 - "GET /security.txt HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34206 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52824 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:47502 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:47518 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47526 - "GET /robots.txt HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47540 - "GET /.well-known/security.txt HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:33446 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:58350 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:46016 - "GET /robots.txt HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:35392 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60640 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37600 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44428 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45228 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:56710 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:57802 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:34186 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:44022 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44026 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:44038 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:44054 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:44066 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44080 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:44092 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44102 - "GET /.env.local HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44114 - "GET /.env.production HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44122 - "GET /.env.staging HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44134 - "GET /.env.development HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44148 - "GET /.env.test HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44160 - "GET /.env.remote HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44166 - "GET /.env.bak HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44168 - "GET /.env.backup HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44174 - "GET /.env.save HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44180 - "GET /.env.old HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44184 - "GET /.env.sample HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44196 - "GET /.env.example HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44212 - "GET /.env.dev HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44226 - "GET /.env.prod HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44232 - "GET /.env.stage HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44246 - "GET /.env.ci HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44254 - "GET /.env.docker HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44262 - "GET /.env.live HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44278 - "GET /.env.preprod HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44280 - "GET /.env.uat HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44288 - "GET /.env.dist HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44290 - "GET /.env.swp HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44306 - "GET /.env~ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44314 - "GET /app/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44320 - "GET /apps/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44330 - "GET /api/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44340 - "GET /web/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44352 - "GET /site/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44364 - "GET /public/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44374 - "GET /admin/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44382 - "GET /backend/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44396 - "GET /server/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44408 - "GET /frontend/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44420 - "GET /src/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44428 - "GET /core/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44432 - "GET /core/app/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44448 - "GET /core/Database/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44460 - "GET /config/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44470 - "GET /private/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44474 - "GET /current/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44476 - "GET /release/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44482 - "GET /releases/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44492 - "GET /shared/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44508 - "GET /deploy/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44512 - "GET /build/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44528 - "GET /dist/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44536 - "GET /public_html/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44544 - "GET /htdocs/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44554 - "GET /www/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44562 - "GET /html/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44578 - "GET /live/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44580 - "GET /prod/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44586 - "GET /dev/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44598 - "GET /staging/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44608 - "GET /laravel/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44618 - "GET /symfony/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44624 - "GET /wordpress/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44634 - "GET /wp/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44646 - "GET /cms/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44652 - "GET /drupal/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44664 - "GET /joomla/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:44676 - "GET /magento/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45034 - "GET /shopify/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45038 - "GET /prestashop/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45050 - "GET /v1/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45058 - "GET /v2/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45070 - "GET /v3/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45074 - "GET /api/v1/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45086 - "GET /api/v2/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45094 - "GET /rest/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45100 - "GET /graphql/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45114 - "GET /gateway/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45116 - "GET /microservice/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45132 - "GET /service/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45140 - "GET /vendor/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45152 - "GET /lib/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45162 - "GET /database/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45170 - "GET /resources/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45182 - "GET /storage/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45186 - "GET /assets/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45198 - "GET /uploads/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45208 - "GET /internal/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45220 - "GET /tools/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45222 - "GET /scripts/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45224 - "GET /portal/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45238 - "GET /dashboard/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45244 - "GET /panel/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45248 - "GET /crm/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45262 - "GET /erp/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45266 - "GET /shop/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45268 - "GET /store/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45270 - "GET /saas/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45280 - "GET /client/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45294 - "GET /project/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45306 - "GET /node/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45316 - "GET /express/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45330 - "GET /next/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45346 - "GET /nuxt/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45348 - "GET /nest/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45364 - "GET /backup/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45374 - "GET /backups/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45376 - "GET /old/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45390 - "GET /tmp/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45394 - "GET /temp/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45400 - "GET /lab/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45410 - "GET /cronlab/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45420 - "GET /cron/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45426 - "GET /en/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45440 - "GET /administrator/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45442 - "GET /psnlink/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45446 - "GET /exapi/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45450 - "GET /sitemaps/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45456 - "GET /mailer/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45468 - "GET /mail/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45470 - "GET /email/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45484 - "GET /smtp/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45494 - "GET /mailing/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45510 - "GET /notifications/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45522 - "GET /notify/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45528 - "GET /sender/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45534 - "GET /campaign/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45550 - "GET /newsletter/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45560 - "GET /ses/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45568 - "GET /sendgrid/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45582 - "GET /sparkpost/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45594 - "GET /postmark/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45606 - "GET /mailgun/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45610 - "GET /mandrill/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45618 - "GET /mailjet/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45626 - "GET /brevo/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45628 - "GET /transactional/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45644 - "GET /bulk/.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45650 - "GET /phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45664 - "GET /info.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45676 - "GET /php.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45692 - "GET /i.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45696 - "GET /pi.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45706 - "GET /pinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45710 - "GET /test.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45726 - "GET /phpinfo HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45736 - "GET /p.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45750 - "GET /debug.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45764 - "GET /admin/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45774 - "GET /test/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45782 - "GET /dev/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45796 - "GET /old/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45804 - "GET /tmp/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45810 - "GET /public/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45818 - "GET /info HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45822 - "GET /php-info.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45838 - "GET /phpversion.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45842 - "GET /_phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45858 - "GET /old_phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45872 - "GET /server-info.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45886 - "GET /server-status.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45894 - "GET /_profiler/phpinfo HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45896 - "GET /_environment HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45904 - "GET /webroot/index.php/_environment HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45914 - "GET /mail/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45918 - "GET /cpanel/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45934 - "GET /hosting/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45940 - "GET /webmail/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45942 - "GET /smtp/phpinfo.php HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47198 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33690 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:32930 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:33286 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:49628 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:36326 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:41828 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:38250 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50582 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:50592 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:58874 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:59604 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:44836 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:52100 - "GET /RDWeb HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52102 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52114 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:51552 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51566 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:48836 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45156 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:35438 - "GET /developmentserver/metadatauploader HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:54484 - "GET /version HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45722 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:41780 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45438 - "GET /ReportServer HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:42240 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:42246 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:48188 - "GET /SDK/webLanguage HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37550 - "GET /%2BCSCOE%2B/logon.html HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37554 - "GET /global-protect/login.esp HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37564 - "GET /login?redir=%2F HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:55580 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:48666 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50592 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:50594 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:52380 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:52392 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:60182 - "GET /wiki HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:40980 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:54324 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47352 - "GET /.env HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47364 - "POST / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:50618 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:53202 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:35496 - "GET /tr/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:47456 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:37662 - "GET /owa/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37678 - "GET /ews/exchange.asmx HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37688 - "GET /autodiscover/autodiscover.xml HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37692 - "GET /Microsoft-Server-ActiveSync HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37706 - "GET /ecp/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37720 - "GET /mapi/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37732 - "GET /rpc/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:37656 - "GET /webui/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:56286 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:45686 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:45004 - "GET /geoserver/web/ HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:51276 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:57540 - "PROPFIND / HTTP/1.1" 405 Method Not Allowed
+INFO:     172.18.0.1:47416 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:40398 - "GET /.git/config HTTP/1.1" 404 Not Found
+INFO:     172.18.0.1:34068 - "GET / HTTP/1.1" 200 OK
+INFO:     172.18.0.1:36634 - "GET /cgi-bin/authLogin.cgi HTTP/1.1" 404 Not Found
