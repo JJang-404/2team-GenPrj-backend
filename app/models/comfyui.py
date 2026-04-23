@@ -148,7 +148,8 @@ class ComfyUIClient:
     def queue_prompt(self, prompt: dict) -> str:
         p = {"prompt": prompt}
         data = json.dumps(p).encode("utf-8")
-        response = requests.post(self.prompt_url, data=data, timeout=30)
+        # prompt 전송 timeout을 60초로 증가
+        response = requests.post(self.prompt_url, data=data, timeout=60)
         response.raise_for_status()
         result = response.json()
         return result["prompt_id"]
@@ -157,12 +158,13 @@ class ComfyUIClient:
         self,
         prompt_id: str,
         poll_interval: float = 1.0,
-        timeout: float = 300.0,
+        timeout: float = 300.0,  # 최대 5분까지 허용
     ) -> dict:
         history_url = f"{self.base_url}/history/{prompt_id}"
         elapsed = 0.0
         while elapsed < timeout:
-            response = requests.get(history_url, timeout=10)
+            # history get timeout을 60초로 증가
+            response = requests.get(history_url, timeout=60)
             response.raise_for_status()
             history = response.json()
             if prompt_id in history:
