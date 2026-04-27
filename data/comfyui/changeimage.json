@@ -1,67 +1,77 @@
 {
-  "6": {
+  "1": {
     "inputs": {
-      "vae_name": "diffusion_pytorch_model.safetensors"
+      "clip_name": "sigclip_vision_patch14_384.safetensors"
     },
-    "class_type": "VAELoader",
+    "class_type": "CLIPVisionLoader",
     "_meta": {
-      "title": "VAE 로드"
+      "title": "CLIP_VISION 로드"
     }
   },
-  "7": {
+  "2": {
     "inputs": {
-      "seed": 954944322156083,
-      "steps": 25,
-      "cfg": 10,
-      "sampler_name": "euler",
-      "scheduler": "sgm_uniform",
-      "denoise": 0.9,
-      "model": [
-        "20",
-        0
-      ],
-      "positive": [
-        "8",
-        0
-      ],
-      "negative": [
-        "9",
-        0
-      ],
-      "latent_image": [
-        "15",
-        0
-      ]
+      "ipadapter": "sd3.5_large_ipadapter.bin",
+      "provider": "cuda"
     },
-    "class_type": "KSampler",
+    "class_type": "IPAdapterSD3Loader",
     "_meta": {
-      "title": "KSampler"
+      "title": "Load IPAdapter SD3 Model"
     }
   },
-  "8": {
+  "3": {
     "inputs": {
-      "text": "(The entire scene is dynamically color-graded based on the dominant hues of the source image:1.8),\n(masterpiece:1.3), (best quality:1.3), (professional advertising photography:1.2), \n\nGPT_TRANSLATED_KEYWORDS, \n\nEmpty display surface, exquisite texture, tight-frame bust-shot, \ncompletely deconstructed background, ethereal hazy wash of ambient light, \n(unrecognizable abstract background:1.5), (no distinct shapes:1.6), (pure smooth color gradients:1.6), \n(dreamlike atmospheric glow extracted from source image:1.5), \nextremely shallow depth of field, 105mm portrait lens perspective, 8k resolution, flawless render.",
-      "clip": [
-        "21",
-        0
-      ]
+      "clip_name1": "clip_g.safetensors",
+      "clip_name2": "clip_l.safetensors",
+      "clip_name3": "t5xxl_fp8_e4m3fn.safetensors"
     },
-    "class_type": "CLIPTextEncode",
+    "class_type": "TripleCLIPLoader",
     "_meta": {
-      "title": "CLIP 텍스트 인코딩 (프롬프트)"
+      "title": "삼중 CLIP 로드"
     }
   },
   "9": {
     "inputs": {
-      "text": "(face:2.0), (human:2.0), (clothing:2.0), (fabric:2.0), (white border:2.0), (white lines:2.0), (any object:2.0), (cup:2.0), (glass:2.0), (beverage:2.0), (drink:2.0), (bottle:2.0), (food:2.0), (people:1.5), (hands:1.5), (text:1.5), (logo:1.5), (watermark:1.5), centered objects, items on table, clutter, indoor, worst quality, low quality, grainy, artifacts.",
+      "text": "(object in center:1.9), (giant table, furniture in middle, floor, base surface:1.8), (cup, mug, glass, paper cup, cup holder, teacup, saucer, coaster, bottle, container, beverage, drink:1.9), (person, human, face, figure, hands, arms:1.9), depth of field blur on center, low quality, worst quality, artificial, blurry, amateur, text, logo, watermark",
       "clip": [
-        "21",
+        "3",
         0
       ]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
       "title": "CLIP 텍스트 인코딩 (프롬프트)"
+    }
+  },
+  "5": {
+    "inputs": {
+      "ckpt_name": "sd3.5_large_fp8_scaled.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "체크포인트 로드"
+    }
+  },
+  "6": {
+    "inputs": {
+      "weight": 0.3,
+      "start_percent": 0,
+      "end_percent": 1,
+      "model": [
+        "5",
+        0
+      ],
+      "ipadapter": [
+        "2",
+        0
+      ],
+      "image_embed": [
+        "21",
+        0
+      ]
+    },
+    "class_type": "ApplyIPAdapterSD3",
+    "_meta": {
+      "title": "Apply IPAdapter SD3 Model"
     }
   },
   "12": {
@@ -77,40 +87,6 @@
       "title": "이미지 저장"
     }
   },
-  "14": {
-    "inputs": {
-      "image": "화면 캡처 2026-04-22 180641.png"
-    },
-    "class_type": "LoadImage",
-    "_meta": {
-      "title": "이미지 로드"
-    }
-  },
-  "15": {
-    "inputs": {
-      "pixels": [
-        "23",
-        0
-      ],
-      "vae": [
-        "16",
-        0
-      ]
-    },
-    "class_type": "VAEEncode",
-    "_meta": {
-      "title": "VAE 인코드"
-    }
-  },
-  "16": {
-    "inputs": {
-      "vae_name": "diffusion_pytorch_model.safetensors"
-    },
-    "class_type": "VAELoader",
-    "_meta": {
-      "title": "VAE 로드"
-    }
-  },
   "17": {
     "inputs": {
       "tile_size": 512,
@@ -122,7 +98,7 @@
         0
       ],
       "vae": [
-        "6",
+        "16",
         0
       ]
     },
@@ -131,86 +107,63 @@
       "title": "VAE 디코드 (타일)"
     }
   },
-  "20": {
+  "16": {
     "inputs": {
-      "ckpt_name": "sd3.5_large_fp8_scaled.safetensors"
+      "vae_name": "diffusion_pytorch_model.safetensors"
     },
-    "class_type": "CheckpointLoaderSimple",
+    "class_type": "VAELoader",
     "_meta": {
-      "title": "체크포인트 로드"
+      "title": "VAE 로드"
+    }
+  },
+  "8": {
+    "inputs": {
+      "text": "photorealistic landscape photography, cinematic lighting, atmospheric, (completely empty center:1.8), (no objects in center:1.8), (unobstructed view:1.7), masterful, masterful quality, masterpiece, best quality, 8k resolution, raw photo, stunning composition",
+      "clip": [
+        "3",
+        0
+      ]
+    },
+    "class_type": "CLIPTextEncode",
+    "_meta": {
+      "title": "CLIP 텍스트 인코딩 (프롬프트)"
+    }
+  },
+  "7": {
+    "inputs": {
+      "seed": 657651595198027,
+      "steps": 20,
+      "cfg": 10,
+      "sampler_name": "euler",
+      "scheduler": "sgm_uniform",
+      "denoise": 0.95,
+      "model": [
+        "6",
+        0
+      ],
+      "positive": [
+        "8",
+        0
+      ],
+      "negative": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "24",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
     }
   },
   "21": {
     "inputs": {
-      "clip_name1": "clip_g.safetensors",
-      "clip_name2": "clip_l.safetensors",
-      "clip_name3": "t5xxl_fp8_e4m3fn.safetensors"
-    },
-    "class_type": "TripleCLIPLoader",
-    "_meta": {
-      "title": "삼중 CLIP 로드"
-    }
-  },
-  "22": {
-    "inputs": {
-      "upscale_method": "nearest-exact",
-      "width": 8,
-      "height": 8,
-      "crop": "disabled",
-      "image": [
-        "31",
-        0
-      ]
-    },
-    "class_type": "ImageScale",
-    "_meta": {
-      "title": "이미지 확대"
-    }
-  },
-  "23": {
-    "inputs": {
-      "upscale_method": "nearest-exact",
-      "width": 1024,
-      "height": 1024,
-      "crop": "disabled",
-      "image": [
-        "22",
-        0
-      ]
-    },
-    "class_type": "ImageScale",
-    "_meta": {
-      "title": "이미지 확대"
-    }
-  },
-  "24": {
-    "inputs": {
-      "images": [
-        "31",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "이미지 미리보기"
-    }
-  },
-  "25": {
-    "inputs": {
-      "reuse_threshold": 0.2,
-      "start_percent": 0.15,
-      "end_percent": 0.95,
-      "verbose": false
-    },
-    "class_type": "EasyCache",
-    "_meta": {
-      "title": "EasyCache"
-    }
-  },
-  "28": {
-    "inputs": {
-      "rembg_session": [
-        "29",
+      "crop": "none",
+      "clip_vision": [
+        "1",
         0
       ],
       "image": [
@@ -218,47 +171,29 @@
         0
       ]
     },
-    "class_type": "ImageRemoveBackground+",
+    "class_type": "CLIPVisionEncode",
     "_meta": {
-      "title": "🔧 Image Remove Background"
+      "title": "CLIP_VISION 인코딩"
     }
   },
-  "29": {
+  "14": {
     "inputs": {
-      "model": "u2net: general purpose",
-      "providers": "CUDA"
+      "image": "4f615f37-3317-42d9-a70e-def4ae24a7d5.png"
     },
-    "class_type": "RemBGSession+",
+    "class_type": "LoadImage",
     "_meta": {
-      "title": "🔧 RemBG Session"
+      "title": "이미지 로드"
     }
   },
-  "31": {
+  "24": {
     "inputs": {
-      "image": [
-        "28",
-        0
-      ],
-      "alpha": [
-        "32",
-        0
-      ]
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
     },
-    "class_type": "JoinImageWithAlpha",
+    "class_type": "EmptySD3LatentImage",
     "_meta": {
-      "title": "알파와 함께 이미지 결합"
-    }
-  },
-  "32": {
-    "inputs": {
-      "mask": [
-        "28",
-        1
-      ]
-    },
-    "class_type": "InvertMask",
-    "_meta": {
-      "title": "마스크 반전"
+      "title": "빈 잠재 이미지 (SD3)"
     }
   }
 }
